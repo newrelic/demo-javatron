@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   test-unit:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -16,5 +17,4 @@ jobs:
 
       - name: Build with Maven
         run: mvn test
-        with:
-          path: javatron
+          working-directory: javatron
