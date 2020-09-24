@@ -1,0 +1,20 @@
+---
+
+- name: Clean previous and build
+  shell: "mvn clean package"
+  args:
+    chdir: /home/{{ ansible_user }}/{{ service_id }}
+
+- name: Remove any previous deployed war
+  file:
+    path: /opt/tomcat/latest/webapps/api.war
+    state: absent
+  become: yes
+
+- name: Copy output
+  shell: "cp /home/{{ ansible_user }}/{{ service_id }}/target/*.war /opt/tomcat/latest/webapps/api.war"
+  become: yes
+
+- name: Configure port
+  shell: 'sed -i "s,8080,{{ service_port }}," /opt/tomcat/latest/conf/server.xml'
+  become: yes

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <display-name>Javatron</display-name>
+
+    <servlet>
+        <servlet-name>ResteasyBehaviors</servlet-name>
+        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.newrelic.api.behaviors.BehaviorsApplication</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResteasyBehaviors</servlet-name>
+        <url-pattern>/behaviors</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ResteasyInventory</servlet-name>
+        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.newrelic.api.inventory.InventoryApplication</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResteasyInventory</servlet-name>
+        <url-pattern>/inventory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResteasyInventory</servlet-name>
+        <url-pattern>/inventory/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ResteasyMessage</servlet-name>
+        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.newrelic.api.message.MessageApplication</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResteasyMessage</servlet-name>
+        <url-pattern>/message</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResteasyMessage</servlet-name>
+        <url-pattern>/message/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResteasyMessage</servlet-name>
+        <url-pattern>/validateMessage</url-pattern>
+    </servlet-mapping>
+
+</web-app>
