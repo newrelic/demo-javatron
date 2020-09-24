@@ -1,33 +1,161 @@
 [![Experimental Project header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#experimental)
 
-# [Name of Project] [build badges go here when available]
+# Demo Javatron
 
->[Brief description - what is the project and value does it provide? How often should users expect to get releases? How is versioning set up? Where does this project want to go?]
+![Test](https://github.com/newrelic/demo-javatron/workflows/Test/badge.svg?event=push)
 
-## Installation
+A java tron for the `demo` platform.
 
-> [Include a step-by-step procedure on how to get your code installed. Be sure to include any third-party dependencies that need to be installed separately]
+Javatron is compatible with the [demo-deployer](https://github.com/newrelic/demo-deployer).
 
-## Getting Started
->[Simple steps to start working with the software similar to a "Hello World"]
-
-## Usage
->[**Optional** - Include more thorough instructions on how to use the software. This section might not be needed if the Getting Started section is enough. Remove this section if it's not needed.]
+It can be deployed with a similar configuration, and can participate in a tron chain with other trons like itself or other languages.
+The simulator can also be used to drive traffic to Javatron.
 
 
-## Building
+### Requirement
 
->[**Optional** - Include this section if users will need to follow specific instructions to build the software from source. Be sure to include any third party build dependencies that need to be installed separately. Remove this section if it's not needed.]
+When hosting on a physical host or VM, javatron requires at least 700MB of memory.
+When deployed with the deployer, a `memmon` watchdog process ensures the process is recycled if the memory consumption exceed this threshold.
 
-## Testing
 
->[**Optional** - Include instructions on how to run tests if we include tests with the codebase. Remove this section if it's not needed.]
+### Behaviors
 
-## Support
+Javatron supports the below behaviors. For more information, see the [Behavior Documentation](https://github.com/newrelic/demo-deployer/tree/main/documentation/developer/behaviors)
 
-New Relic hosts and moderates an online forum where customers can interact with New Relic employees as well as other customers to get help and share best practices. Like all official New Relic open source projects, there's a related Community topic in the New Relic Explorers Hub. You can find this project's topic/threads here:
+* Throw
+* Compute
+* Memory Allocation
 
->Add the url for the support thread here
+
+### Running with Docker
+
+You can run Javatron with the provided Dockerfile at the root.
+After ensuring your docker application is started on your machine, run the below commmand while in the root of the repository
+
+Building the docker image
+```bash
+docker build -t javatron .
+```
+
+Running Javatron on the default port of 8081
+```bash
+docker run -it -p 8081:8081 javatron
+```
+
+Running the unit tests (handled with maven)
+```bash
+docker run -it --entrypoint mvn javatron test
+```
+
+### Deploy with demo-deployer
+This java application can be deployed with the [demo-deployer](https://github.com/newrelic/demo-deployer) using the /deploy scripts in this repository.
+Here is an example of the deploy config that can be used to deploy a javatron service on an AWS/EC2 instance:
+
+```json
+{
+  "services": [
+    {
+      "id": "java1",
+      "source_repository": "https://github.com/newrelic/demo-javatron.git",
+      "deploy_script_path": "deploy/linux/roles",
+      "port": 5001,
+      "destinations": ["host"]
+    }
+  ],
+
+  "resources": [
+    {
+      "id": "host",
+      "provider": "aws",
+      "type": "ec2",
+      "size": "t2.micro"
+    }
+  ]
+}
+```
+
+The deploy scripts are using Tomcat, and due to its installation resides in the /opt location of the host. Therefore, only 1 instance of Javatron can be deployed per host. There is currently no validations nor assertions that ensure this incorrect configuration is used.
+
+Tomcat is configured with a max heap memory size of 700MB. A memory watchdog process `memmon` is implemented to recycle the process once that threshold (polling once per min).
+
+#### Newrelic instrumentation
+
+Javatron can be instrumented with newrelic. To do so you can reference the instrumentation role using the deployer configuration below.
+Note, you'll also need to install the ansible galaxy plugin locally before running the deployer, using the command: `ansible-galaxy install newrelic.newrelic_java_agent`
+
+```json
+{
+
+  "instrumentations": {
+    "services":[
+      {
+        "id": "nr_agent_java",
+        "service_ids": ["java1"],
+        "provider": "newrelic",
+        "source_repository": "https://github.com/newrelic/demo-newrelic-instrumentation.git",
+        "deploy_script_path": "deploy/java/linux/tomcat/roles"
+      }
+    ]
+  }
+
+}
+```
+
+
+#### Log support
+
+At this time Javatron only supports regular log with NR, not Logs-in-Context. To ship the logs to NR, use a regular log instrumentor, here is a snippet example:
+
+```json
+{
+
+  "instrumentations": {
+    "services":[
+      {
+        "id": "nr_log_javatron",
+        "service_ids": ["java1"],
+        "provider": "newrelic",
+        "source_repository": "https://github.com/newrelic/demo-newrelic-instrumentation.git",
+        "deploy_script_path": "deploy/logging/roles"
+      }
+    ]
+  }
+
+}
+```
+
+
+#### Cron jobs support
+
+Cron jobs can be registered upon deployment using the demo-deployer Files configuration for the service. Here is an example for restarting a `java1` service every hour, at the 0 minute.
+
+```json
+{
+  "services": [
+    {
+      "id": "java1",
+      "display_name": "Java1",
+      "source_repository": "https://github.com/newrelic/demo-javatron.git",
+      "deploy_script_path": "deploy/linux/roles",
+      "port": 5001,
+      "destinations": ["host"],
+      "files": [
+        {
+          "destination_filepath": "javatron/cronjob.json",
+          "content": [
+              {
+                  "frequency": "0 * * * *",
+                  "job": "/usr/bin/supervisorctl restart java1",
+                  "root": true
+              }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
 
 ## Contributing
 We encourage your contributions to improve [project name]! Keep in mind when you submit your pull request, you'll need to sign the CLA via the click-through using CLA-Assistant. You only have to sign the CLA one time per project.
