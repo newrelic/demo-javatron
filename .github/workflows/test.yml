@@ -11,11 +11,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up JDK 1.14
+        id: install
         uses: actions/setup-java@v1
         with:
           java-version: 1.14
 
       - name: Build with Maven
+        id: test
         run: mvn test
         working-directory: javatron
 
@@ -79,8 +81,7 @@ jobs:
                       type: "mrkdwn",
                       text: [
                         "*Result:*",
-                        `• ${ ${{ steps.install.outcome == 'success' }} === true ? '✅' : '❌' } Install dependencies: ${{ steps.install.outcome }}`,
-                        `• ${ ${{ steps.lint.outcome == 'success' }} === true ? '✅' : '❌' } Lint: ${{ steps.lint.outcome }}`,
+                        `• ${ ${{ steps.install.outcome == 'success' }} === true ? '✅' : '❌' } Install JDK: ${{ steps.install.outcome }}`,
                         `• ${ ${{ steps.test.outcome == 'success' }} === true ? '✅' : '❌' } Test: ${{ steps.test.outcome }}`
                       ].join('\n')
                     }
