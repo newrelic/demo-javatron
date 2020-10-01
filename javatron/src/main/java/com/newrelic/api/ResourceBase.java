@@ -4,6 +4,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.lang.*;
+import java.lang.management.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -18,6 +19,21 @@ public class ResourceBase
     public ResourceBase()
     {
         _httpUtil = null;
+    }
+
+    public void EnsureAppIsStarted() throws Exception
+    {
+        var delayStartMs = GetAppConfigRepository().FindDelayStartMs();
+        if (delayStartMs > 0)
+        {
+            var runtime = ManagementFactory.getRuntimeMXBean();
+            var startTimeMs = runtime.getStartTime();
+            var currentTimeMs = System.currentTimeMillis();
+            if (startTimeMs+delayStartMs < currentTimeMs)
+            {
+                throw new Exception("The application is not yet ready to accept traffic");
+            }
+        }
     }
 
     public Hashtable<String,String> GetHttpHeaders()

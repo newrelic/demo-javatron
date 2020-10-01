@@ -47,6 +47,17 @@ public class AppConfigRepository implements IAppConfigRepository
         return defaultPort;
     }
 
+    public int FindDelayStartMs()
+    {
+        var obj = GetRootJsonObject();
+        var value = obj.get("delayStartMs");
+        if (value != null)
+        {
+            return ((Number)value).intValue();
+        }
+        return 0;
+    }
+
     public AppConfigDependency[] FindDependencies()
     {
         var obj = GetRootJsonObject();

@@ -17,6 +17,7 @@ public class InventoryResource extends ResourceBase
    @Produces("application/json")
    public Response get() throws Exception
    {
+      EnsureAppIsStarted();
       Logger.GetOrCreate().Info("/api/inventory GET");
       GetBehaviorService().HandlePreFunc();
       var repository = new InventoryRepository();
@@ -33,6 +34,7 @@ public class InventoryResource extends ResourceBase
    @Produces("application/json")
    public Response getById(@PathParam("id") String id) throws Exception
    {
+      EnsureAppIsStarted();
       Logger.GetOrCreate().Info("/api/inventory/"+id +" GET");
       GetBehaviorService().HandlePreFunc();
       var repository = new InventoryRepository();

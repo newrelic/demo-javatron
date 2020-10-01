@@ -8,5 +8,6 @@ public interface IAppConfigRepository
 {
     public String FindAppId();
     public int FindPortOrDefault(int defaultPort);
+    public int FindDelayStartMs();
     public AppConfigDependency[] FindDependencies();
 }

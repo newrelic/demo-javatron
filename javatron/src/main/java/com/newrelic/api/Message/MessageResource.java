@@ -17,6 +17,7 @@ public class MessageResource extends ResourceBase
    @Produces("application/json")
    public Response get() throws Exception
    {
+      EnsureAppIsStarted();
       Logger.GetOrCreate().Info("/api/validateMessage GET");
       GetBehaviorService().HandlePreFunc();
       var message = new Message();
