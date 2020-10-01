@@ -12,6 +12,8 @@ import com.newrelic.lib.*;
 
 import com.newrelic.api.behaviors.*;
 
+import com.newrelic.lib.Logger;
+
 public class ResourceBase
 {
     @Context HttpHeaders httpHeaders;
@@ -29,7 +31,7 @@ public class ResourceBase
             var runtime = ManagementFactory.getRuntimeMXBean();
             var startTimeMs = runtime.getStartTime();
             var currentTimeMs = System.currentTimeMillis();
-            if (startTimeMs+delayStartMs < currentTimeMs)
+            if (currentTimeMs < startTimeMs+delayStartMs)
             {
                 throw new Exception("The application is not yet ready to accept traffic");
             }
