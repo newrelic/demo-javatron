@@ -33,7 +33,9 @@ public class ResourceBase
             var currentTimeMs = System.currentTimeMillis();
             if (currentTimeMs < startTimeMs+delayStartMs)
             {
-                throw new Exception("The application is not yet ready to accept traffic");
+                var message = "The application is not yet ready to accept traffic";
+                Logger.GetOrCreate().Error(message);
+                throw new Exception(message);
             }
         }
     }
