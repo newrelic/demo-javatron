@@ -1,7 +1,7 @@
 {
   "id" : "{{ service_id }}",
   "port" : {{ service_port }},
-  "delayStartMs": {{ delay_start_ms | 0 }},
+  "delayStartMs": {{ delay_start_ms }},
   "dependencies":
   {{ dependencies | to_json }}
 }
