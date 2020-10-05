@@ -59,7 +59,10 @@ Here is an example of the deploy config that can be used to deploy a javatron se
       "source_repository": "https://github.com/newrelic/demo-javatron.git",
       "deploy_script_path": "deploy/linux/roles",
       "port": 5001,
-      "destinations": ["host"]
+      "destinations": ["host"],
+      "params": {
+        "delay_start_ms": 5000
+      }
     }
   ],
 
@@ -77,6 +80,9 @@ Here is an example of the deploy config that can be used to deploy a javatron se
 The deploy scripts are using Tomcat, and due to its installation resides in the /opt location of the host. Therefore, only 1 instance of Javatron can be deployed per host. There is currently no validations nor assertions that ensure this incorrect configuration is used.
 
 Tomcat is configured with a max heap memory size of 700MB. A memory watchdog process `memmon` is implemented to recycle the process once that threshold (polling once per min).
+
+#### Params
+* delay_start_ms can be used to delay the time the service starts by this amount in milliseconds. During that interval, any incoming http request will error.
 
 #### Newrelic instrumentation
 

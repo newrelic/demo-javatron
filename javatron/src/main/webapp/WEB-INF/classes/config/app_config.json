@@ -1,5 +1,6 @@
 {
   "id" : "Javatron1",
   "port": 5001,
+  "delayStartMs": 60000,
   "dependencies": []
 }

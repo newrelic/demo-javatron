@@ -51,8 +51,11 @@ public class TronHandler
             Logger.GetOrCreate().Info("Invoking queryUrl:"+ queryUrl);
             var downstreamResponse = _httpUtil.QueryService(queryUrl, requestDemoHeaders);
 
-            if(downstreamResponse.GetStatusCode() < 200 || downstreamResponse.GetStatusCode() > 299){
-                throw new Exception();
+            var statusCode = downstreamResponse.GetStatusCode();
+            if(statusCode < 200 || statusCode > 299){
+                var message = String.format("Error while invoking endpoint, response code:%d", statusCode);
+                Logger.GetOrCreate().Error(message);
+                throw new Exception(message);
             }
 
             if (IsTracingEnabled())

@@ -4,12 +4,15 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.lang.*;
+import java.lang.management.*;
 import java.util.*;
 import java.util.function.*;
 
 import com.newrelic.lib.*;
 
 import com.newrelic.api.behaviors.*;
+
+import com.newrelic.lib.Logger;
 
 public class ResourceBase
 {
@@ -18,6 +21,23 @@ public class ResourceBase
     public ResourceBase()
     {
         _httpUtil = null;
+    }
+
+    public void EnsureAppIsStarted() throws Exception
+    {
+        var delayStartMs = GetAppConfigRepository().FindDelayStartMs();
+        if (delayStartMs > 0)
+        {
+            var runtime = ManagementFactory.getRuntimeMXBean();
+            var startTimeMs = runtime.getStartTime();
+            var currentTimeMs = System.currentTimeMillis();
+            if (currentTimeMs < startTimeMs+delayStartMs)
+            {
+                var message = "The application is not yet ready to accept traffic";
+                Logger.GetOrCreate().Error(message);
+                throw new Exception(message);
+            }
+        }
     }
 
     public Hashtable<String,String> GetHttpHeaders()
