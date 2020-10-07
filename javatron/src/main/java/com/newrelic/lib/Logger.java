@@ -5,15 +5,12 @@ import java.util.*;
 import java.util.function.*;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Handler;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 
 public class Logger implements ILogger
 {
     private Logger()
-    {        
+    {
     }
 
     public void Debug(String message)
@@ -49,24 +46,15 @@ public class Logger implements ILogger
 
     private void Configure()
     {
-        jlogger.setUseParentHandlers(false);
-        var allHandlers = jlogger.getHandlers();
-        for(var handler : allHandlers)
+        try
         {
-            jlogger.removeHandler(handler);
+            LogManager.getLogManager().readConfiguration();
+            LogManager.getLogManager().addLogger(jlogger);
         }
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setFormatter(new SimpleFormatter(){
-            private static final String format = "%1$s %2$s %n";
-            @Override
-            public synchronized String format(java.util.logging.LogRecord lr) {
-                return String.format(format,
-                        lr.getLevel().getLocalizedName(),
-                        lr.getMessage()
-                );
-            }
-        });
-        jlogger.addHandler(consoleHandler);
+        catch (IOException ioException)
+        {
+            System.out.println(ioException.getMessage());
+        }
     }
 
     private static ILogger proxyInstance = null;
