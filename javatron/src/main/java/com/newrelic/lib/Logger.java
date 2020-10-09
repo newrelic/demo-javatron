@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.function.*;
 
 import java.io.IOException;
-import java.util.logging.*;
+import org.apache.logging.log4j.*;
 
 public class Logger implements ILogger
 {
@@ -15,22 +15,22 @@ public class Logger implements ILogger
 
     public void Debug(String message)
     {
-        jlogger.fine(message);
+        logger.debug(message);
     }
 
     public void Info(String message)
     {
-        jlogger.info(message);
+        logger.info(message);
     }
     
     public void Warning(String message)
     {
-        jlogger.warning(message);
+        logger.warn(message);
     }
 
     public void Error(String message)
     {
-        jlogger.severe(message);
+        logger.error(message);
     }
 
     public static ILogger GetOrCreate()
@@ -46,17 +46,9 @@ public class Logger implements ILogger
 
     private void Configure()
     {
-        try
-        {
-            LogManager.getLogManager().readConfiguration();
-            LogManager.getLogManager().addLogger(jlogger);
-        }
-        catch (IOException ioException)
-        {
-            System.out.println(ioException.getMessage());
-        }
+        // Nothing specific for log4j
     }
 
     private static ILogger proxyInstance = null;
-    private static final java.util.logging.Logger jlogger = java.util.logging.Logger.getGlobal();
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(Logger.class);
 }
