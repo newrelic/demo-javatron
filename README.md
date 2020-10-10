@@ -110,7 +110,8 @@ Note, you'll also need to install the ansible galaxy plugin locally before runni
 
 #### Log support
 
-At this time Javatron only supports regular log with NR, not Logs-in-Context. To ship the logs to NR, use a regular log instrumentor, here is a snippet example:
+Logging is supported through the use of log4j using a log4j2.xml file in the /webapp/WEB-INF folder.
+To enable logs-in-context you can use the deployer configuration below.
 
 ```json
 {
@@ -118,11 +119,11 @@ At this time Javatron only supports regular log with NR, not Logs-in-Context. To
   "instrumentations": {
     "services":[
       {
-        "id": "nr_log_javatron",
+        "id": "nr_logging_in_context",
         "service_ids": ["java1"],
         "provider": "newrelic",
         "source_repository": "https://github.com/newrelic/demo-newrelic-instrumentation.git",
-        "deploy_script_path": "deploy/logging/roles"
+        "deploy_script_path": "deploy/logging_in_context/roles"
       }
     ]
   }
