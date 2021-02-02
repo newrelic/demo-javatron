@@ -1,0 +1,18 @@
+# This workflow will run relevant test actions & produce output to slack.
+# Each action will:
+#   1. run a deployment for a given deploy config.
+#   2. parse deployment output for urls of deployed resources.
+#   3. run curl commands against urls and confirm correct results.
+#   4. teardown deployment.
+
+name: WIP - Deployment tests
+
+on: [push, pull_request]
+
+jobs:
+  test-unit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
