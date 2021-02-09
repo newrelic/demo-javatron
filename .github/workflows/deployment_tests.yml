@@ -24,49 +24,40 @@ jobs:
         run: docker pull ghcr.io/newrelic/deployer:latest
 
       - name: general setup
+        env:
+          USER_CONFIG: ${{ secrets.UAT_USER_CONFIG }}
         run: |
           rm -rf configs demo-javatron tmp
           mkdir configs demo-javatron tmp
           cp ./user_acceptance_tests/deploy_configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json configs
           cp -R deploy demo-javatron
           cp -R javatron demo-javatron
+          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
           gem install rest-client
 
-      # Setup aws / run aws deployment
       - name: aws setup
-        if: matrix.cloud_provider == 'aws'
         env:
           PEM_KEY: ${{ secrets.PEM_KEY }}
-          USER_CONFIG: ${{ secrets.AWS_USER_CONFIG }}
         run: |
           echo "$PEM_KEY" > configs/uat-ca.pem
           chmod 400 configs/uat-ca.pem
-          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
 
-      # Setup azure / run azure deployment
       - name: azure setup
-        if: matrix.cloud_provider == 'azure'
         env:
           ID_RSA_PUB: ${{ secrets.UAT_AZURE_ID_RSA_PUB_FILE }}
           ID_RSA: ${{ secrets.UAT_AZURE_ID_RSA_FILE }}
-          USER_CONFIG: ${{ secrets.AZURE_USER_CONFIG }}
         run: |
-          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
           ssh-keygen -m PEM -t rsa -b 4096 -f $HOME/.ssh/id_rsa -q -N ""
           mv $HOME/.ssh configs
 
-      # Setup gcp / run gcp deployment
       - name: gcp setup
-        if: matrix.cloud_provider == 'gcp'
         env:
           UAT_GCP_PEM_FILE: ${{ secrets.UAT_GCP_PEM_FILE }}
           UAT_GCP_SERVICEACCOUNT_FILE: ${{ secrets.UAT_GCP_SERVICEACCOUNT_FILE }}
-          USER_CONFIG: ${{ secrets.GCP_USER_CONFIG }}
         run: | 
           echo "$UAT_GCP_PEM_FILE" > $GITHUB_WORKSPACE/configs/compute-user.pem
           chmod 400 $GITHUB_WORKSPACE/configs/compute-user.pem
           echo "$UAT_GCP_SERVICEACCOUNT_FILE" > $GITHUB_WORKSPACE/configs/demo-newrelic-staging-gcp-service-account.json
-          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
 
       - name: debug ls - configs
         run: ls $GITHUB_WORKSPACE/configs
