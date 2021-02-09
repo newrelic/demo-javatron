@@ -33,7 +33,7 @@ jobs:
           cp -R deploy demo-javatron
           cp -R javatron demo-javatron
           echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
-          gem install rest-client
+          bundle install --gemfile=user_acceptance_tests/tests/Gemfile
 
       - name: aws setup
         env:
@@ -76,7 +76,7 @@ jobs:
         run: |
           ls tmp
 
-      - name: run testing script
+      - name: run tests
         run: ruby ./user_acceptance_tests/tests/${{ matrix.scenario }}.rb
         env:
           TEST_INPUT_FILE_LOCATION: tmp/javatron-testing-${{ matrix.scenario }}-${{ matrix.cloud_provider }}/deploy_summary.txt

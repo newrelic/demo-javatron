@@ -1,24 +1,63 @@
+require 'minitest/spec'
+require 'minitest/autorun'
 require 'rest-client'
 
-test_input = File.read(ENV['TEST_INPUT_FILE_LOCATION'])
+describe 'Deployment Tests' do
+  let(:service_url) do
+    get_service_url_regex(
+      get_test_input(ENV['TEST_INPUT_FILE_LOCATION'])
+    )
+  end
 
-puts "Test input: #{test_input}\n"
+  it 'GET /api/inventory should return HTTP 200 OK' do
+    response = RestClient.get("#{service_url}/api/inventory")
+    expect(response.code).must_equal(200)
+  end
 
-base_url = test_input.scan(/testing_endpoint:'(.+)'/)[0][0]
+  it 'GET /api/inventory/1 should return HTTP 200 OK' do
+    response = RestClient.get("#{service_url}/api/inventory")
+    expect(response.code).must_equal(200)
+  end
 
-# "tests" here
-responses = [
-    RestClient.get("#{base_url}/api/inventory"),
-    RestClient.get("#{base_url}/api/inventory/1"),
-    RestClient.get("#{base_url}/api/validateMessage"),
-    RestClient.get("#{base_url}/api/behaviors")
-]
+  it 'GET /api/validateMessage should return HTTP 200 OK' do
+    response = RestClient.get("#{service_url}/api/inventory")
+    expect(response.code).must_equal(200)
+  end
 
-responses.each do |response|
-    puts "Request: #{response.request.url}, Status: #{response.code}"
-end
+  it 'GET /api/behaviors should return HTTP 200 OK' do
+    response = RestClient.get("#{service_url}/api/inventory")
+    expect(response.code).must_equal(200)
+  end
 
-if responses.any? { |response| response.code != 200 }
-    puts "A test failed"
-    exit(1)
+  def get_test_input(file_path)
+    test_input = File.read(file_path)
+    test_input
+  end
+
+  def get_service_url_json(test_input)
+    service_url = JSON.parse(test_input)
+                      .fetch('services', [{}])
+                      .first
+                      .fetch('urls', [])
+                      .first
+    if service_url.nil?
+      puts 'Test input does not contain a url for testing'
+      puts "Test input: \n#{test_input}"
+      exit(1)
+    else
+      service_url
+    end
+  end
+
+  def get_service_url_regex(test_input)
+    service_url = test_input.scan(/testing_endpoint:'(.+)'/)[0][0]
+
+    if service_url.nil?
+      puts 'Test input does not contain a url for testing'
+      puts "Test input: \n#{test_input}"
+      exit(1)
+    else
+      service_url
+    end
+  end
 end
