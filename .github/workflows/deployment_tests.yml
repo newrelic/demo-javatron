@@ -77,6 +77,7 @@ jobs:
           ls tmp
 
       - name: run tests
+        id: test
         run: ruby ./user_acceptance_tests/tests/${{ matrix.scenario }}.rb
         env:
           TEST_INPUT_FILE_LOCATION: tmp/javatron-testing-${{ matrix.scenario }}-${{ matrix.cloud_provider }}/deploy_summary.txt
@@ -91,3 +92,87 @@ jobs:
           ghcr.io/newrelic/deployer:latest \
           main.rb -d /mnt/deployer/configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json -t -l debug
       
+      - name: slack notification
+        uses:  8398a7/action-slack@v3
+        if: always() && github.event_name == 'push'
+        with:
+          author_name: GitHub Actions
+          status: custom
+          fields: commit,repo,ref,author,eventName,message,workflow
+          custom_payload: |
+            {
+              username: "GitHub Actions",
+              icon_emoji: ":octocat:",
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? '#43cc11' : '${{ job.status }}' === 'failure' ? '#e05d44' : '#dfb317',
+                blocks: [
+                  {
+                    type: "section",
+                    text: {
+                      type: "mrkdwn",
+                      text: `Build for ${process.env.AS_REPO}`
+                    }
+                  },
+                  {
+                    type: "section",
+                    fields: [
+                      {
+                        type: "mrkdwn",
+                        text: `*Commit:*\n${process.env.AS_COMMIT}`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Author:*\n${process.env.AS_AUTHOR}`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Branch:*\n${process.env.AS_REF}`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Message:*\n${process.env.AS_MESSAGE}`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Type:*\n${process.env.AS_EVENT_NAME}`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: "*PR:*\n${{ github.event.pull_request.html_url }}"
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*Workflow:*\n${ process.env.AS_WORKFLOW }`
+                      }
+                    ]
+                  },
+                  {
+                    type: "section",
+                    text: {
+                      type: "mrkdwn",
+                      text: [
+                        "*Result:*",
+                        `• ${ ${{ steps.test.outcome == 'success' }} === true ? '✅' : '❌' } ${{ matrix.cloud_provider }} - ${{ matrix.scenario }} - Test: ${{ steps.test.outcome }}`
+                      ].join('\n')
+                    }
+                  },
+                  {
+                    type: "context",
+                    elements: [
+                      {
+                        type: "image",
+                        image_url: "https://avatars2.githubusercontent.com/in/15368",
+                        alt_text: "Github Actions"
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: "This message was created automatically by GitHub Actions."
+                      }
+                    ]
+                  }
+                ]
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
