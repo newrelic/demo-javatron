@@ -1,18 +1,102 @@
-# This workflow will run relevant test actions & produce output to slack.
-# Each action will:
-#   1. run a deployment for a given deploy config.
-#   2. parse deployment output for urls of deployed resources.
-#   3. run curl commands against urls and confirm correct results.
-#   4. teardown deployment.
-
 name: WIP - Deployment tests
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  test-unit:
+  deployment-test:
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        cloud_provider: [aws, azure, gcp] 
+        scenario: [happy]
 
     steps:
-      - name: Checkout Repo
+      - name: checkout repo
         uses: actions/checkout@v2
+      
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
+      - name: pull v3 deployer image
+        run: docker pull ghcr.io/newrelic/deployer:latest
+
+      - name: general setup
+        run: |
+          rm -rf configs demo-javatron tmp
+          mkdir configs demo-javatron tmp
+          cp ./user_acceptance_tests/deploy_configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json configs
+          cp -R deploy demo-javatron
+          cp -R javatron demo-javatron
+          gem install rest-client
+
+      # Setup aws / run aws deployment
+      - name: aws setup
+        if: matrix.cloud_provider == 'aws'
+        env:
+          PEM_KEY: ${{ secrets.PEM_KEY }}
+          USER_CONFIG: ${{ secrets.AWS_USER_CONFIG }}
+        run: |
+          echo "$PEM_KEY" > configs/uat-ca.pem
+          chmod 400 configs/uat-ca.pem
+          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
+
+      # Setup azure / run azure deployment
+      - name: azure setup
+        if: matrix.cloud_provider == 'azure'
+        env:
+          ID_RSA_PUB: ${{ secrets.UAT_AZURE_ID_RSA_PUB_FILE }}
+          ID_RSA: ${{ secrets.UAT_AZURE_ID_RSA_FILE }}
+          USER_CONFIG: ${{ secrets.AZURE_USER_CONFIG }}
+        run: |
+          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
+          ssh-keygen -m PEM -t rsa -b 4096 -f $HOME/.ssh/id_rsa -q -N ""
+          mv $HOME/.ssh configs
+
+      # Setup gcp / run gcp deployment
+      - name: gcp setup
+        if: matrix.cloud_provider == 'gcp'
+        env:
+          UAT_GCP_PEM_FILE: ${{ secrets.UAT_GCP_PEM_FILE }}
+          UAT_GCP_SERVICEACCOUNT_FILE: ${{ secrets.UAT_GCP_SERVICEACCOUNT_FILE }}
+          USER_CONFIG: ${{ secrets.GCP_USER_CONFIG }}
+        run: | 
+          echo "$UAT_GCP_PEM_FILE" > $GITHUB_WORKSPACE/configs/compute-user.pem
+          chmod 400 $GITHUB_WORKSPACE/configs/compute-user.pem
+          echo "$UAT_GCP_SERVICEACCOUNT_FILE" > $GITHUB_WORKSPACE/configs/demo-newrelic-staging-gcp-service-account.json
+          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
+
+      - name: debug ls - configs
+        run: ls $GITHUB_WORKSPACE/configs
+
+      - name: run deployment
+        id: deployment
+        run: |
+          docker run -t \
+          -v $GITHUB_WORKSPACE/demo-javatron:/mnt/deployer/demo-javatron \
+          -v $GITHUB_WORKSPACE/configs:/mnt/deployer/configs \
+          -v $GITHUB_WORKSPACE/tmp:/tmp \
+          ghcr.io/newrelic/deployer:latest \
+          main.rb -d /mnt/deployer/configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json -l debug
+
+      - name: debug ls - tmp
+        run: |
+          ls tmp
+
+      - name: run testing script
+        run: ruby ./user_acceptance_tests/tests/${{ matrix.scenario }}.rb
+        env:
+          TEST_INPUT_FILE_LOCATION: tmp/javatron-testing-${{ matrix.scenario }}-${{ matrix.cloud_provider }}/deploy_summary.txt
+
+      - name: run teardown
+        if: always()
+        run: |
+          docker run -t \
+          -v $GITHUB_WORKSPACE/demo-javatron:/mnt/deployer/demo-javatron \
+          -v $GITHUB_WORKSPACE/configs:/mnt/deployer/configs \
+          -v $GITHUB_WORKSPACE/tmp:/tmp \
+          ghcr.io/newrelic/deployer:latest \
+          main.rb -d /mnt/deployer/configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json -t -l debug
+      
