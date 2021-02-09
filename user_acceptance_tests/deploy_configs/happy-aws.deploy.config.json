@@ -20,8 +20,5 @@
             "type": "ec2",
             "size": "t2.micro"
         }
-    ],
-    "output": {
-        "footnote": "testing_endpoint:'[service:java1:url]'"
-    }
+    ]
 }

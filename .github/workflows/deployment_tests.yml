@@ -70,7 +70,8 @@ jobs:
           -v $GITHUB_WORKSPACE/configs:/mnt/deployer/configs \
           -v $GITHUB_WORKSPACE/tmp:/tmp \
           ghcr.io/newrelic/deployer:latest \
-          main.rb -d /mnt/deployer/configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json -l debug
+          main.rb -d /mnt/deployer/configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json -l debug \
+          -o /tmp/output.json
 
       - name: debug ls - tmp
         run: |
@@ -80,7 +81,8 @@ jobs:
         id: test
         run: ruby ./user_acceptance_tests/tests/${{ matrix.scenario }}.rb
         env:
-          TEST_INPUT_FILE_LOCATION: tmp/javatron-testing-${{ matrix.scenario }}-${{ matrix.cloud_provider }}/deploy_summary.txt
+          #TEST_INPUT_FILE_LOCATION: tmp/javatron-testing-${{ matrix.scenario }}-${{ matrix.cloud_provider }}/deploy_summary.txt
+          TEST_INPUT_FILE_LOCATION: tmp/output.json
 
       - name: run teardown
         if: always()
@@ -152,7 +154,7 @@ jobs:
                       type: "mrkdwn",
                       text: [
                         "*Result:*",
-                        `• ${ ${{ steps.test.outcome == 'success' }} === true ? '✅' : '❌' } ${{ matrix.cloud_provider }} - ${{ matrix.scenario }} - Test: ${{ steps.test.outcome }}`
+                        `• ${ ${{ steps.test.outcome == 'success' }} === true ? '✅' : '❌' } Test (${{ matrix.cloud_provider }}, ${{ matrix.scenario }}): ${{ steps.test.outcome }}`
                       ].join('\n')
                     }
                   },

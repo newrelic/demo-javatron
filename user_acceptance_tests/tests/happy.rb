@@ -1,10 +1,11 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'rest-client'
+require 'json'
 
 describe 'Deployment Tests' do
   let(:service_url) do
-    get_service_url_regex(
+    get_service_url_json(
       get_test_input(ENV['TEST_INPUT_FILE_LOCATION'])
     )
   end

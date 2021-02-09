@@ -20,8 +20,5 @@
             "type": "compute",
             "size": "e2-small"
         }
-    ],
-    "output": {
-        "footnote": "testing_endpoint:'[service:java1:url]'"
-    }
+    ]
 }

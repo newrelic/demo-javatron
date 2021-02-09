@@ -20,8 +20,5 @@
             "type": "vm",
             "size": "Standard_B1s"
         }
-    ],
-    "output": {
-        "footnote": "testing_endpoint:'[service:java1:url]'"
-    }
+    ]
 }
