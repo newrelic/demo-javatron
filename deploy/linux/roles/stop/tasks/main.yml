@@ -28,7 +28,7 @@
   become: true
 
 - name: check if service is running
-  shell: '{{ supervisorctl_path.stdout }} status | grep {{ service_id }}'
+  shell: '{{ supervisorctl_path.stdout }} status | grep "^{{ service_id }}" | wc -l'
   register: service_running
   when: supervisorctl_path.rc == 0
 
@@ -40,7 +40,7 @@
   when:
     - supervisorctl_path.rc == 0
     - service_running is defined
-    - service_running.rc == 0
+    - service_running.stdout|int == 1
 
 - name: supervisord remove service
   shell: '{{ supervisorctl_path.stdout }} remove {{ service_id }}'
@@ -50,4 +50,4 @@
   when:
     - supervisorctl_path.rc == 0
     - service_running is defined
-    - service_running.rc == 0
+    - service_running.stdout|int == 1
