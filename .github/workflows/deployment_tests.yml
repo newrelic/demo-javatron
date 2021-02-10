@@ -1,6 +1,6 @@
 name: Deployment tests
 
-on: [push, pull_request, workflow_dispatch]
+on: [pull_request, workflow_dispatch]
 
 env:
   TRON_FOLDER: demo-javatron
@@ -84,7 +84,6 @@ jobs:
         id: test
         run: ruby ./user_acceptance_tests/tests/${{ matrix.scenario }}.rb
         env:
-          #TEST_INPUT_FILE_LOCATION: tmp/javatron-testing-${{ matrix.scenario }}-${{ matrix.cloud_provider }}/deploy_summary.txt
           TEST_INPUT_FILE_LOCATION: tmp/output.json
 
       - name: run teardown
