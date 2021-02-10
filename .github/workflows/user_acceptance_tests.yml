@@ -1,4 +1,4 @@
-name: Deployment tests
+name: User Acceptance Tests
 
 on: [pull_request, workflow_dispatch]
 
@@ -6,7 +6,7 @@ env:
   TRON_FOLDER: demo-javatron
 
 jobs:
-  deployment-test:
+  user-acceptance-tests:
     runs-on: ubuntu-latest
     
     strategy:
