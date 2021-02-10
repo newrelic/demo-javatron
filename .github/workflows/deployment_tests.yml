@@ -2,6 +2,9 @@ name: Deployment tests
 
 on: [push, pull_request, workflow_dispatch]
 
+env:
+  TRON_FOLDER: demo-javatron
+
 jobs:
   deployment-test:
     runs-on: ubuntu-latest
@@ -27,12 +30,12 @@ jobs:
         env:
           USER_CONFIG: ${{ secrets.UAT_USER_CONFIG }}
         run: |
-          rm -rf configs demo-javatron tmp
-          mkdir configs demo-javatron tmp
+          rm -rf configs $TRON_FOLDER tmp
+          mkdir configs $TRON_FOLDER tmp
           cp ./user_acceptance_tests/deploy_configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json configs
-          cp -R deploy demo-javatron
-          cp -R javatron demo-javatron
-          echo "$USER_CONFIG" > configs/javatron-testing.user.credentials.local.json
+          cp -R deploy $TRON_FOLDER
+          cp -R javatron $TRON_FOLDER
+          echo "$USER_CONFIG" > "configs/uat-$TRON_FOLDER.user.credentials.local.json"
           bundle install --gemfile=user_acceptance_tests/tests/Gemfile
 
       - name: aws setup
@@ -66,7 +69,7 @@ jobs:
         id: deployment
         run: |
           docker run -t \
-          -v $GITHUB_WORKSPACE/demo-javatron:/mnt/deployer/demo-javatron \
+          -v $GITHUB_WORKSPACE/$TRON_FOLDER:/mnt/deployer/$TRON_FOLDER \
           -v $GITHUB_WORKSPACE/configs:/mnt/deployer/configs \
           -v $GITHUB_WORKSPACE/tmp:/tmp \
           ghcr.io/newrelic/deployer:latest \
@@ -88,7 +91,7 @@ jobs:
         if: always()
         run: |
           docker run -t \
-          -v $GITHUB_WORKSPACE/demo-javatron:/mnt/deployer/demo-javatron \
+          -v $GITHUB_WORKSPACE/$TRON_FOLDER:/mnt/deployer/$TRON_FOLDER \
           -v $GITHUB_WORKSPACE/configs:/mnt/deployer/configs \
           -v $GITHUB_WORKSPACE/tmp:/tmp \
           ghcr.io/newrelic/deployer:latest \
