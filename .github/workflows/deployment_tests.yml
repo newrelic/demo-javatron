@@ -1,4 +1,4 @@
-name: WIP - Deployment tests
+name: Deployment tests
 
 on: [push, pull_request, workflow_dispatch]
 
