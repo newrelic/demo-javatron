@@ -44,7 +44,7 @@ The current setup is:
 
 * 1 conceptual scenario.
 * 3 deploy configs (duplicate the scenario pieces for each cloud_provider).
-* 1 test file for the scenario, that runs 3x, for each deployment. This file can contain any number of tests as well as any setup needed in order for the tests to run.
+* 1 test file for the scenario that runs once for each deployment. This file can contain any number of tests as well as any setup needed in order for the tests to run.
 
 The deploy configs will under the [deploy_configs](./deploy_configs) folder with a name matching `{scenario}-{cloud_provider}.deploy.config.json`
 
