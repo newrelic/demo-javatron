@@ -27,9 +27,9 @@
     chdir: /etc/supervisor/conf.d
   become: true
 
-- name: check if javatron is running
-  shell: '{{ supervisorctl_path.stdout }} status {{ service_id }} | grep {{ service_id }} | wc -l'
-  register: javatron_running
+- name: check if service is running
+  shell: '{{ supervisorctl_path.stdout }} status | grep {{ service_id }}'
+  register: service_running
   when: supervisorctl_path.rc == 0
 
 - name: supervisord stop service
@@ -39,7 +39,8 @@
   become: true
   when:
     - supervisorctl_path.rc == 0
-    - javatron_running is defined
+    - service_running is defined
+    - service_running.rc == 0
 
 - name: supervisord remove service
   shell: '{{ supervisorctl_path.stdout }} remove {{ service_id }}'
@@ -48,4 +49,5 @@
   become: true
   when:
     - supervisorctl_path.rc == 0
-    - javatron_running is defined
+    - service_running is defined
+    - service_running.rc == 0
