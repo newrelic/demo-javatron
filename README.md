@@ -81,6 +81,10 @@ The deploy scripts are using Tomcat, and due to its installation resides in the 
 
 Tomcat is configured with a max heap memory size of 700MB. A memory watchdog process `memmon` is implemented to recycle the process once that threshold (polling once per min).
 
+### User Acceptance Tests
+
+The `user_acceptance_tests` folder contains automated tests which run on github and are triggered by PR events. For more information, see [User Acceptance Tests](./user_acceptance_tests/README.md).
+
 #### Params
 * delay_start_ms can be used to delay the time the service starts by this amount in milliseconds. During that interval, any incoming http request will error.
 
