@@ -21,12 +21,12 @@ describe 'Deployment Tests' do
   end
 
   it 'GET /api/validateMessage should return HTTP 200 OK' do
-    response = RestClient.get("#{service_url}/api/inventory/validateMessage")
+    response = RestClient.get("#{service_url}/api/validateMessage")
     expect(response.code).must_equal(200)
   end
 
   it 'GET /api/behaviors should return HTTP 200 OK' do
-    response = RestClient.get("#{service_url}/api/inventory/behaviors")
+    response = RestClient.get("#{service_url}/api/behaviors")
     expect(response.code).must_equal(200)
   end
 
