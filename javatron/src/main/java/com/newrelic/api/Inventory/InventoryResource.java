@@ -1,4 +1,4 @@
-package com.newrelic.api.inventory;
+package com.newrelic.api.Inventory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -9,6 +9,7 @@ import java.util.function.*;
 
 import com.newrelic.api.ResourceBase;
 import com.newrelic.lib.Logger;
+import com.newrelic.lib.Inventory.InventoryManagerFactory;
 
 @Path("/inventory")
 public class InventoryResource extends ResourceBase
@@ -20,7 +21,10 @@ public class InventoryResource extends ResourceBase
       EnsureAppIsStarted();
       Logger.GetOrCreate().Info("/api/inventory GET");
       GetBehaviorService().HandlePreFunc();
-      var repository = new InventoryRepository();
+
+      var appConfig = GetAppConfigRepository();
+      var manager = new InventoryManagerFactory().createInventoryManager(appConfig);
+      var repository = new InventoryRepository(manager);
       var entities = repository.FindAll();
       var handler = CreateTronHandler();
       handler.InvokeDependencies("/api/inventory");
@@ -37,7 +41,10 @@ public class InventoryResource extends ResourceBase
       EnsureAppIsStarted();
       Logger.GetOrCreate().Info("/api/inventory/"+id +" GET");
       GetBehaviorService().HandlePreFunc();
-      var repository = new InventoryRepository();
+
+      var appConfig = GetAppConfigRepository();
+      var manager = new InventoryManagerFactory().createInventoryManager(appConfig);
+      var repository = new InventoryRepository(manager);
       var entity = repository.FindOrNull(id);
       var handler = CreateTronHandler();
       handler.InvokeDependencies("/api/inventory/"+id);

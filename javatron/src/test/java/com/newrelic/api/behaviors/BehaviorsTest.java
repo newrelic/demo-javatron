@@ -1,4 +1,4 @@
-package com.newrelic.api.behaviors;
+package com.newrelic.api.Behaviors;
 
 import static org.junit.Assert.assertTrue;
 

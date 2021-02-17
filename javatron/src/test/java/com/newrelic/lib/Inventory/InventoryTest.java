@@ -1,4 +1,4 @@
-package com.newrelic.api.inventory;
+package com.newrelic.lib.Inventory;
 
 import static org.junit.Assert.assertTrue;
 

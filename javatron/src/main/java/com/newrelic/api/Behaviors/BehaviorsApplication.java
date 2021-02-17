@@ -1,4 +1,4 @@
-package com.newrelic.api.behaviors;
+package com.newrelic.api.Behaviors;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;

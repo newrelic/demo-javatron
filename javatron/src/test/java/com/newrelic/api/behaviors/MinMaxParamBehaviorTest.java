@@ -1,4 +1,4 @@
-package com.newrelic.api.behaviors;
+package com.newrelic.api.Behaviors;
 
 import org.json.simple.*;
 import org.json.simple.parser.*;

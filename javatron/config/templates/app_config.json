@@ -2,5 +2,11 @@
   "id" : "appid",
   "port": 5000,
   "delayStartMs": 60000,
-  "dependencies": []
+  "dependencies": [],
+  "database": {
+    "host": "",
+    "port": "",
+    "user": "",
+    "password": ""
+  }
 }

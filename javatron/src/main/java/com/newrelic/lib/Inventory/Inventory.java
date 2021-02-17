@@ -1,4 +1,4 @@
-package com.newrelic.api.inventory;
+package com.newrelic.lib.Inventory;
 
 import java.io.Serializable;
 

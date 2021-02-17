@@ -1,4 +1,4 @@
-package com.newrelic.api.inventory;
+package com.newrelic.api.Inventory;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
