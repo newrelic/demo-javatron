@@ -7,18 +7,22 @@ import java.util.function.Supplier;
 
 import com.newrelic.lib.*;
 
-public class InventoryRepository {
+public class InventoryRepository
+{
     private Supplier<Hashtable<String, Hashtable<String,String>>> _loader;
 
-    public InventoryRepository() {
+    public InventoryRepository()
+    {
         _loader = () -> GetDefaultList();
     }
 
-    public InventoryRepository(Supplier<Hashtable<String, Hashtable<String,String>>> loader) {
+    public InventoryRepository(Supplier<Hashtable<String, Hashtable<String,String>>> loader)
+    {
         _loader = loader;
     }
 
-    public Inventory[] FindAll() {
+    public Inventory[] FindAll()
+    {
         var dictionary = _loader.get();
         var list = new ArrayList<Inventory>();
         dictionary.values().forEach(item -> list.add(Inventory.create(item)));
@@ -27,7 +31,8 @@ public class InventoryRepository {
         return output;
     }
 
-    public Hashtable<String, Hashtable<String,String>> GetDefaultList() {
+    public Hashtable<String, Hashtable<String,String>> GetDefaultList()
+    {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         var content = TomcatFileReader.GetContent(loader, "data/inventory.json");
         var reader = new JsonFileReader();

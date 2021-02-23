@@ -14,48 +14,20 @@ import com.newrelic.lib.Inventory.Inventory;
 
 public class InventoryRepository
 {
-    // private Supplier<Hashtable<String, Hashtable<String,String>>> _loader;
-
-    // public InventoryRepository()
-    // {
-    //     _loader = () -> GetDefaultList();
-    // }
-
-    // public InventoryRepository(Supplier<Hashtable<String, Hashtable<String,String>>> loader)
-    // {
-    //     _loader = loader;
-    // }
-
     private IInventoryManager inventoryManager;
 
-    public InventoryRepository(IInventoryManager manager) {
+    public InventoryRepository(IInventoryManager manager)
+    {
         inventoryManager = manager;
     }
 
-    public Inventory FindOrNull(String id) throws Exception {
+    public Inventory FindOrNull(String id) throws Exception
+    {
         return inventoryManager.Query(id);
     }
 
-    public Inventory[] FindAll() throws Exception {
+    public Inventory[] FindAll() throws Exception
+    {
         return inventoryManager.Query();
     }
-
-    // private Inventory createInventory(Hashtable<String,String> attributes)
-    // {
-    //     var inventory = new Inventory();
-    //     inventory.setId(attributes.get("id"));
-    //     inventory.setItem(attributes.get("item"));
-    //     inventory.setPrice(attributes.get("price"));
-    //     inventory.setSku(attributes.get("sku"));
-    //     return inventory;
-    // }
-
-    // public Hashtable<String, Hashtable<String,String>> GetDefaultList()
-    // {
-    //     ClassLoader loader = Thread.currentThread().getContextClassLoader();
-    //     var content = TomcatFileReader.GetContent(loader, "data/inventory.json");
-    //     var reader = new JsonFileReader();
-    //     var dictionary = reader.ReadJson(content);
-    //     return dictionary;
-    // }
 }

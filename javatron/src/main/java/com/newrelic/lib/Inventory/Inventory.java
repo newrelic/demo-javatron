@@ -3,14 +3,16 @@ package com.newrelic.lib.Inventory;
 import java.util.*;
 import java.io.Serializable;
 
-public class Inventory implements Serializable {
+public class Inventory implements Serializable
+{
 
 	private String id;
 	private String item;
 	private String price;
 	private String sku;
 
-    public static Inventory create(Hashtable<String,String> attributes) {
+    public static Inventory create(Hashtable<String,String> attributes)
+    {
         var inventory = new Inventory();
         inventory.setId(attributes.get("id"));
         inventory.setItem(attributes.get("item"));
@@ -19,34 +21,43 @@ public class Inventory implements Serializable {
         return inventory;
     }
 
-	public Inventory() {
+	public Inventory()
+    {
 	}
 
-	public String getId() {
+	public String getId()
+    {
 		return this.id;
     }	
-	public void setId(String id) {
+	public void setId(String id)
+    {
 		this.id = id;
 	}
 
-	public String getItem() {
+	public String getItem()
+    {
 		return this.item;
     }	
-	public void setItem(String item) {
+	public void setItem(String item)
+    {
 		this.item = item;
 	}
 
-	public String getPrice() {
+	public String getPrice()
+    {
 		return this.price;
     }	
-	public void setPrice(String price) {
+	public void setPrice(String price)
+    {
 		this.price = price;
 	}
 
-	public String getSku() {
+	public String getSku()
+    {
 		return this.sku;
     }	
-	public void setSku(String sku) {
+	public void setSku(String sku)
+    {
 		this.sku = sku;
 	}
 }
