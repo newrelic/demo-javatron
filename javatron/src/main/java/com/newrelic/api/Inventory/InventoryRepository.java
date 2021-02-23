@@ -32,11 +32,11 @@ public class InventoryRepository
         inventoryManager = manager;
     }
 
-    public Inventory FindOrNull(String id) {
+    public Inventory FindOrNull(String id) throws Exception {
         return inventoryManager.Query(id);
     }
 
-    public Inventory[] FindAll() {
+    public Inventory[] FindAll() throws Exception {
         return inventoryManager.Query();
     }
 

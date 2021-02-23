@@ -9,7 +9,7 @@
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.newrelic.api.behaviors.BehaviorsApplication</param-value>
+            <param-value>com.newrelic.api.Behaviors.BehaviorsApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -22,7 +22,7 @@
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.newrelic.api.inventory.InventoryApplication</param-value>
+            <param-value>com.newrelic.api.Inventory.InventoryApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

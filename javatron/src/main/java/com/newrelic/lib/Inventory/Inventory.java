@@ -1,5 +1,6 @@
 package com.newrelic.lib.Inventory;
 
+import java.util.*;
 import java.io.Serializable;
 
 public class Inventory implements Serializable {
@@ -8,6 +9,15 @@ public class Inventory implements Serializable {
 	private String item;
 	private String price;
 	private String sku;
+
+    public static Inventory create(Hashtable<String,String> attributes) {
+        var inventory = new Inventory();
+        inventory.setId(attributes.get("id"));
+        inventory.setItem(attributes.get("item"));
+        inventory.setPrice(attributes.get("price"));
+        inventory.setSku(attributes.get("sku"));
+        return inventory;
+    }
 
 	public Inventory() {
 	}

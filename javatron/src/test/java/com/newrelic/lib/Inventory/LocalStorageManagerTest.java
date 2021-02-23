@@ -13,16 +13,16 @@ public class LocalStorageManagerTest
     @Test
     public void shouldCreateManager()
     {
-        GivenRepository();
-        assertTrue( Repository != null );
+        GivenManager();
+        assertTrue( Manager != null );
     }
 
     @Test
     public void ShouldFindExistingItem()
     {
-        GivenItem(123, "Item 1", "$99", "SKUX");
-        GivenRepository();
-        var item = Repository.FindOrNull("123");
+        GivenItem("123", "Item 1", "$99", "SKUX");
+        GivenManager();
+        var item = Manager.Query("123");
         assertTrue( item != null );
         assertEquals(item.getId(), "123");
         assertEquals(item.getItem(), "Item 1");
@@ -33,46 +33,46 @@ public class LocalStorageManagerTest
     @Test
     public void ShouldFindOneOfManyItems()
     {
-        GivenItem(123, "Item 1", "$11", "SKUX");
-        GivenItem(456, "Item 2", "$22", "SKUY");
-        GivenItem(789, "Item 3", "$33", "SKUZ");
-        GivenRepository();
-        var item = Repository.FindOrNull("456");
+        GivenItem("123", "Item 1", "$11", "SKUX");
+        GivenItem("456", "Item 2", "$22", "SKUY");
+        GivenItem("789", "Item 3", "$33", "SKUZ");
+        GivenManager();
+        var item = Manager.Query("456");
         assertTrue( item != null );
     }
 
     @Test
     public void ShouldFindItemNoAttributes()
     {
-        GivenItemEmpty(123);
-        GivenRepository();
-        var item = Repository.FindOrNull("123");
+        GivenItemEmpty("123");
+        GivenManager();
+        var item = Manager.Query("123");
         assertTrue( item != null );
     }
 
     @Test
     public void ShouldNotFindMissingItem()
     {
-        GivenRepository();
-        var item = Repository.FindOrNull("123");
+        GivenManager();
+        var item = Manager.Query("123");
         assertTrue( item == null );
     }
 
     @Test
     public void ShouldNotFindItemWithoutIdentity()
     {
-        GivenRepository();
+        GivenManager();
         GivenItemWithoutIdentity("Item 1", "$99", "SKUX");
-        var item = Repository.FindOrNull("123");
+        var item = Manager.Query("123");
         assertTrue( item == null );
     }
 
     @Test
     public void ShouldNotFindItemWhenNoIdentityProvided()
     {
-        GivenRepository();
-        GivenItem(123, "Item 1", "$99", "SKUX");
-        var item = Repository.FindOrNull(null);
+        GivenManager();
+        GivenItem("123", "Item 1", "$99", "SKUX");
+        var item = Manager.Query(null);
         assertTrue( item == null );
     }
 
@@ -83,16 +83,16 @@ public class LocalStorageManagerTest
         Repository = null;
     }
 
-    public LocalStorageManager GivenRepository()
+    public LocalStorageManager GivenManager()
     {
-        if (Repository == null)
+        if (Manager == null)
         {
-            Repository = new LocalStorageManager(GetLoader());
+            Manager = new LocalStorageManager(new InventoryRepository(GetLoader()));
         }
-        return Repository;
+        return Manager;
     }
 
-    public void GivenItemEmpty(int id)
+    public void GivenItemEmpty(String id)
     {
         var attributes = new Hashtable<String,String>();
         attributes.put("id", String.valueOf(id));
@@ -108,10 +108,10 @@ public class LocalStorageManagerTest
         _items.put("", attributes);
     }
 
-    public void GivenItem(int id, String item, String price, String sku)
+    public void GivenItem(String id, String item, String price, String sku)
     {
         var attributes = new Hashtable<String,String>();
-        attributes.put("id", String.valueOf(id));
+        attributes.put("id", id);
         attributes.put("item", item);
         attributes.put("price", price);
         attributes.put("sku", sku);
@@ -124,5 +124,6 @@ public class LocalStorageManagerTest
     }
 
     private Hashtable<String, Hashtable<String,String>> _items;
-    private LocalStorageManager Repository;
+    private InventoryRepository Repository;
+    private LocalStorageManager Manager;
 }
