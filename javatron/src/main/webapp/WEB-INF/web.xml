@@ -39,7 +39,7 @@
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.newrelic.api.message.MessageApplication</param-value>
+            <param-value>com.newrelic.api.Message.MessageApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
