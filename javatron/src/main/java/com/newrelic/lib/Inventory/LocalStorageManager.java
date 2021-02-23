@@ -1,5 +1,7 @@
 package com.newrelic.lib.Inventory;
 
+import com.newrelic.lib.Logger;
+
 public class LocalStorageManager implements IInventoryManager
 {
 
@@ -32,7 +34,7 @@ public class LocalStorageManager implements IInventoryManager
         {
             for (Inventory item : inventory)
             {
-                if (item.getId() == id)
+                if (id.equals(item.getId()))
                 {
                     return item;
                 }

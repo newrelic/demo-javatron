@@ -1,8 +1,5 @@
 package com.newrelic.lib;
 
-import java.util.*;
-import java.lang.*;
-
 import java.io.Serializable;
 
 public class AppConfigMySQLConfiguration implements Serializable
@@ -40,10 +37,10 @@ public class AppConfigMySQLConfiguration implements Serializable
     }
 
     public boolean isConfigured() {
-        if (this.host != null &&
-            this.port != null &&
-            this.user != null &&
-            this.password != null) {
+        if (this.host != null && !this.host.isEmpty() &&
+            this.port != null && !this.port.isEmpty() &&
+            this.user != null && !this.user.isEmpty() &&
+            this.password != null && !this.password.isEmpty()) {
             return true;
         }
 
