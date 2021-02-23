@@ -5,7 +5,7 @@ import com.newrelic.lib.Logger;
 
 public class InventoryManagerFactory
 {
-    public IInventoryManager createInventoryManager(IAppConfigRepository appConfig)
+    public static IInventoryManager createInventoryManager(IAppConfigRepository appConfig)
     {
         if (appConfig.FindMySQLConfiguration().isConfigured())
         {

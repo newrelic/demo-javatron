@@ -3,10 +3,6 @@ package com.newrelic.api.Inventory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
-import java.lang.*;
-import java.util.*;
-import java.util.function.*;
-
 import com.newrelic.api.ResourceBase;
 import com.newrelic.lib.Logger;
 import com.newrelic.lib.Inventory.InventoryManagerFactory;
@@ -23,7 +19,7 @@ public class InventoryResource extends ResourceBase
       GetBehaviorService().HandlePreFunc();
 
       var appConfig = GetAppConfigRepository();
-      var manager = new InventoryManagerFactory().createInventoryManager(appConfig);
+      var manager = InventoryManagerFactory.createInventoryManager(appConfig);
       var repository = new InventoryRepository(manager);
       var entities = repository.FindAll();
       var handler = CreateTronHandler();
@@ -43,7 +39,7 @@ public class InventoryResource extends ResourceBase
       GetBehaviorService().HandlePreFunc();
 
       var appConfig = GetAppConfigRepository();
-      var manager = new InventoryManagerFactory().createInventoryManager(appConfig);
+      var manager = InventoryManagerFactory.createInventoryManager(appConfig);
       var repository = new InventoryRepository(manager);
       var entity = repository.FindOrNull(id);
       var handler = CreateTronHandler();
