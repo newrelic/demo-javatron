@@ -12,24 +12,44 @@ import com.newrelic.lib.AppConfigMySQLConfiguration;
 
 public class MySQLManager implements IInventoryManager
 {
+    private static MySQLManager singletonInstance;
 
     private Connection conn;
     private AppConfigMySQLConfiguration config;
     private String databaseName;
     private InventoryRepository repo;
 
-    public MySQLManager(AppConfigMySQLConfiguration config, String databaseName)
+
+    private MySQLManager(AppConfigMySQLConfiguration config, String databaseName)
     {
         this.repo = new InventoryRepository();
         this.config = config;
         this.databaseName = databaseName;
     }
 
-    public MySQLManager(AppConfigMySQLConfiguration config, String databaseName, InventoryRepository repo)
+    private MySQLManager(AppConfigMySQLConfiguration config, String databaseName, InventoryRepository repo)
     {
         this.repo = repo;
         this.config = config;
         this.databaseName = databaseName;
+    }
+
+    public static MySQLManager getInstance(AppConfigMySQLConfiguration config, String databaseName)
+    {
+       if (MySQLManager.singletonInstance == null) {
+           MySQLManager.singletonInstance = new MySQLManager(config, databaseName);
+       }
+
+       return MySQLManager.singletonInstance;
+    }
+
+    public static MySQLManager getInstance(AppConfigMySQLConfiguration config, String databaseName, InventoryRepository repo)
+    {
+       if (MySQLManager.singletonInstance == null) {
+           MySQLManager.singletonInstance = new MySQLManager(config, databaseName, repo);
+       }
+
+       return MySQLManager.singletonInstance;
     }
 
     public Inventory[] Query() throws Exception
