@@ -86,7 +86,11 @@ Tomcat is configured with a max heap memory size of 700MB. A memory watchdog pro
 The `user_acceptance_tests` folder contains automated tests which run on github and are triggered by PR events. For more information, see [User Acceptance Tests](./user_acceptance_tests/README.md).
 
 #### Params
-* delay_start_ms can be used to delay the time the service starts by this amount in milliseconds. During that interval, any incoming http request will error.
+* `delay_start_ms` can be used to delay the time the service starts by this amount in milliseconds. During that interval, any incoming http request will error.
+* `database_user` is used when connecting to a database. It defines the user to connect as.
+* `database_password` is used when connecting to a database. It defines the password to use when connecting as the user denoted in the database_user field.
+* `database_host` is used when connecting to a database. Its value should be the IP address of the database.
+* `database_port` is used when connecting to a database. Its value should be the port that the database is listening on.
 
 #### Newrelic instrumentation
 
