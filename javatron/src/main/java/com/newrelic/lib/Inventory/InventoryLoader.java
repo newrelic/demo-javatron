@@ -7,23 +7,23 @@ import java.util.function.Supplier;
 
 import com.newrelic.lib.*;
 
-public class InventoryRepository
+public class InventoryLoader
 {
-    private Supplier<Hashtable<String, Hashtable<String,String>>> _loader;
+    private Supplier<Hashtable<String, Hashtable<String,String>>> _fileLoader;
 
-    public InventoryRepository()
+    public InventoryLoader()
     {
-        _loader = () -> GetDefaultList();
+        _fileLoader = () -> GetDefaultList();
     }
 
-    public InventoryRepository(Supplier<Hashtable<String, Hashtable<String,String>>> loader)
+    public InventoryLoader(Supplier<Hashtable<String, Hashtable<String,String>>> fileLoader)
     {
-        _loader = loader;
+        _fileLoader = fileLoader;
     }
 
-    public Inventory[] FindAll()
+    public Inventory[] LoadAll()
     {
-        var dictionary = _loader.get();
+        var dictionary = _fileLoader.get();
         var list = new ArrayList<Inventory>();
         dictionary.values().forEach(item -> list.add(Inventory.create(item)));
         Inventory output[] = new Inventory[list.size()];

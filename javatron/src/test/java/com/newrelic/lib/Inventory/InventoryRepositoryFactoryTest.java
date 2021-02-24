@@ -8,23 +8,23 @@ import org.junit.*;
 import org.json.simple.JSONObject;
 import com.newrelic.lib.AppConfigRepository;
 
-public class InventoryManagerFactoryTest
+public class InventoryRepositoryFactoryTest
 {
     @Test
-    public void shouldCreateLocalStorageManager()
+    public void shouldCreateLocalStorageRepository()
     {
         GivenRepository();
-        var manager = InventoryManagerFactory.createInventoryManager(Repository);
-        assertTrue( manager instanceof LocalStorageManager );
+        var manager = InventoryRepositoryFactory.createInventoryRepository(Repository);
+        assertTrue( manager instanceof LocalStorageRepository );
     }
 
     @Test
-    public void shouldCreateMySQLManager()
+    public void shouldCreateMySQLRepository()
     {
        GivenMySQLConfiguration("fakehost", "3000", "testuser", "testpassword");
        GivenRepository();
-       var manager = InventoryManagerFactory.createInventoryManager(Repository);
-       assertTrue( manager instanceof MySQLManager );
+       var manager = InventoryRepositoryFactory.createInventoryRepository(Repository);
+       assertTrue( manager instanceof MySQLRepository );
     }
 
     @Before

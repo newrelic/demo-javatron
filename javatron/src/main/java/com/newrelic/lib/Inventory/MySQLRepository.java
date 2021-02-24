@@ -10,49 +10,49 @@ import java.util.*;
 import com.newrelic.lib.Logger;
 import com.newrelic.lib.AppConfigMySQLConfiguration;
 
-public class MySQLManager implements IInventoryManager
+public class MySQLRepository implements IInventoryRepository
 {
-    private static MySQLManager singletonInstance;
+    private static MySQLRepository singletonInstance;
 
     private Connection conn;
     private AppConfigMySQLConfiguration config;
     private String databaseName;
-    private InventoryRepository repo;
+    private InventoryLoader loader;
 
 
-    private MySQLManager(AppConfigMySQLConfiguration config, String databaseName)
+    private MySQLRepository(AppConfigMySQLConfiguration config, String databaseName)
     {
-        this.repo = new InventoryRepository();
+        this.loader = new InventoryLoader();
         this.config = config;
         this.databaseName = databaseName;
     }
 
-    private MySQLManager(AppConfigMySQLConfiguration config, String databaseName, InventoryRepository repo)
+    private MySQLRepository(AppConfigMySQLConfiguration config, String databaseName, InventoryLoader loader)
     {
-        this.repo = repo;
+        this.loader = loader;
         this.config = config;
         this.databaseName = databaseName;
     }
 
-    public static MySQLManager getInstance(AppConfigMySQLConfiguration config, String databaseName)
+    public static MySQLRepository getInstance(AppConfigMySQLConfiguration config, String databaseName)
     {
-       if (MySQLManager.singletonInstance == null) {
-           MySQLManager.singletonInstance = new MySQLManager(config, databaseName);
+       if (MySQLRepository.singletonInstance == null) {
+           MySQLRepository.singletonInstance = new MySQLRepository(config, databaseName);
        }
 
-       return MySQLManager.singletonInstance;
+       return MySQLRepository.singletonInstance;
     }
 
-    public static MySQLManager getInstance(AppConfigMySQLConfiguration config, String databaseName, InventoryRepository repo)
+    public static MySQLRepository getInstance(AppConfigMySQLConfiguration config, String databaseName, InventoryLoader loader)
     {
-       if (MySQLManager.singletonInstance == null) {
-           MySQLManager.singletonInstance = new MySQLManager(config, databaseName, repo);
+       if (MySQLRepository.singletonInstance == null) {
+           MySQLRepository.singletonInstance = new MySQLRepository(config, databaseName, loader);
        }
 
-       return MySQLManager.singletonInstance;
+       return MySQLRepository.singletonInstance;
     }
 
-    public Inventory[] Query() throws Exception
+    public Inventory[] FindAll() throws Exception
     {
         if (!initialize())
         {
@@ -67,7 +67,7 @@ public class MySQLManager implements IInventoryManager
         return extractInventory(results);
     }
 
-    public Inventory Query(String id) throws Exception
+    public Inventory FindOrNull(String id) throws Exception
     {
         if (!initialize())
         {
@@ -198,7 +198,7 @@ public class MySQLManager implements IInventoryManager
     {
         var query = String.format("CREATE TABLE IF NOT EXISTS `%s`.`inventory` (`id` INT UNSIGNED NOT NULL, `item` VARCHAR(255) NOT NULL,`price` VARCHAR(255) NOT NULL, `sku` VARCHAR(255) NOT NULL, PRIMARY KEY (id));", this.databaseName);
         var result = runQuery(query);
-        var inventory = this.repo.FindAll();
+        var inventory = this.loader.LoadAll();
 
         for (Inventory item : inventory)
         {
