@@ -30,6 +30,11 @@ describe 'Deployment Tests' do
     expect(response.code).must_equal(200)
   end
 
+  it 'GET /api/database/health should return HTTP 200 OK' do
+    response = RestClient.get("#{service_url}/api/behaviors")
+    expect(response.code).must_equal(200)
+  end
+
   def get_test_input(file_path)
     test_input = File.read(file_path)
     test_input

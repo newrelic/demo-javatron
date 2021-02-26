@@ -55,4 +55,17 @@
         <url-pattern>/validateMessage</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ResteasyHealth</servlet-name>
+        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.newrelic.api.Health.HealthApplication</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResteasyHealth</servlet-name>
+        <url-pattern>/database/health</url-pattern>
+    </servlet-mapping>
+
 </web-app>

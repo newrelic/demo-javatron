@@ -91,6 +91,18 @@ public class MySQLRepository implements IInventoryRepository
         return null;
     }
 
+    public boolean isConnected()
+    {
+        if (initialize()) {
+            var results = runQuery("SELECT 1;");
+            if (results != null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private ResultSet runQuery(String queryString)
     {
         try
