@@ -10,4 +10,5 @@ public interface IAppConfigRepository
     public int FindPortOrDefault(int defaultPort);
     public int FindDelayStartMs();
     public AppConfigDependency[] FindDependencies();
+    public AppConfigMySQLConfiguration FindMySQLConfiguration();
 }

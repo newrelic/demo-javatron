@@ -58,6 +58,28 @@ public class AppConfigRepository implements IAppConfigRepository
         return 0;
     }
 
+    public AppConfigMySQLConfiguration FindMySQLConfiguration()
+    {
+        var dbConfig = new AppConfigMySQLConfiguration();
+
+        var obj = GetRootJsonObject();
+        var dbObj = (JSONObject) obj.get("database");
+        if (dbObj != null)
+        {
+            var host = (String) dbObj.get("host");
+            var port = (String) dbObj.get("port");
+            var user = (String) dbObj.get("user");
+            var password = (String) dbObj.get("password");
+
+            dbConfig.setHost(host);
+            dbConfig.setPort(port);
+            dbConfig.setUser(user);
+            dbConfig.setPassword(password);
+        }
+
+        return dbConfig;
+    }
+
     public AppConfigDependency[] FindDependencies()
     {
         var obj = GetRootJsonObject();

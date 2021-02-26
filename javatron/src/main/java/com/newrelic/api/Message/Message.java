@@ -1,4 +1,4 @@
-package com.newrelic.api.message;
+package com.newrelic.api.Message;
 
 import java.io.Serializable;
 

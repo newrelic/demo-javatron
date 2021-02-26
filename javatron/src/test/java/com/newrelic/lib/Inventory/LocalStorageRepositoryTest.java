@@ -1,4 +1,4 @@
-package com.newrelic.api.inventory;
+package com.newrelic.lib.Inventory;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-public class InventoryRepositoryTest 
+public class LocalStorageRepositoryTest
 {
     @Test
     public void shouldCreateRepository()
@@ -18,7 +18,7 @@ public class InventoryRepositoryTest
     @Test
     public void ShouldFindExistingItem()
     {
-        GivenItem(123, "Item 1", "$99", "SKUX");
+        GivenItem("123", "Item 1", "$99", "SKUX");
         GivenRepository();
         var item = Repository.FindOrNull("123");
         assertTrue( item != null );
@@ -31,9 +31,9 @@ public class InventoryRepositoryTest
     @Test
     public void ShouldFindOneOfManyItems()
     {
-        GivenItem(123, "Item 1", "$11", "SKUX");
-        GivenItem(456, "Item 2", "$22", "SKUY");
-        GivenItem(789, "Item 3", "$33", "SKUZ");
+        GivenItem("123", "Item 1", "$11", "SKUX");
+        GivenItem("456", "Item 2", "$22", "SKUY");
+        GivenItem("789", "Item 3", "$33", "SKUZ");
         GivenRepository();
         var item = Repository.FindOrNull("456");
         assertTrue( item != null );
@@ -42,7 +42,7 @@ public class InventoryRepositoryTest
     @Test
     public void ShouldFindItemNoAttributes()
     {
-        GivenItemEmpty(123);
+        GivenItemEmpty("123");
         GivenRepository();
         var item = Repository.FindOrNull("123");
         assertTrue( item != null );
@@ -55,7 +55,7 @@ public class InventoryRepositoryTest
         var item = Repository.FindOrNull("123");
         assertTrue( item == null );
     }
-    
+
     @Test
     public void ShouldNotFindItemWithoutIdentity()
     {
@@ -69,7 +69,7 @@ public class InventoryRepositoryTest
     public void ShouldNotFindItemWhenNoIdentityProvided()
     {
         GivenRepository();
-        GivenItem(123, "Item 1", "$99", "SKUX");
+        GivenItem("123", "Item 1", "$99", "SKUX");
         var item = Repository.FindOrNull(null);
         assertTrue( item == null );
     }
@@ -78,25 +78,24 @@ public class InventoryRepositoryTest
     public void Init()
     {
         _items = new Hashtable<String, Hashtable<String,String>>();
-        Repository = null;
     }
 
-    public InventoryRepository GivenRepository()
+    public LocalStorageRepository GivenRepository()
     {
         if (Repository == null)
         {
-            Repository = new InventoryRepository(GetLoader());
+            Repository = new LocalStorageRepository(new InventoryLoader(GetLoader()));
         }
         return Repository;
     }
 
-    public void GivenItemEmpty(int id)
+    public void GivenItemEmpty(String id)
     {
         var attributes = new Hashtable<String,String>();
         attributes.put("id", String.valueOf(id));
         _items.put(String.valueOf(id), attributes);
     }
-    
+
     public void GivenItemWithoutIdentity(String item, String price, String sku)
     {
         var attributes = new Hashtable<String,String>();
@@ -105,11 +104,11 @@ public class InventoryRepositoryTest
         attributes.put("sku", sku);
         _items.put("", attributes);
     }
-    
-    public void GivenItem(int id, String item, String price, String sku)
+
+    public void GivenItem(String id, String item, String price, String sku)
     {
         var attributes = new Hashtable<String,String>();
-        attributes.put("id", String.valueOf(id));
+        attributes.put("id", id);
         attributes.put("item", item);
         attributes.put("price", price);
         attributes.put("sku", sku);
@@ -122,5 +121,5 @@ public class InventoryRepositoryTest
     }
 
     private Hashtable<String, Hashtable<String,String>> _items;
-    private InventoryRepository Repository;
+    private LocalStorageRepository Repository;
 }

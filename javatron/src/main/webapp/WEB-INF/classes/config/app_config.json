@@ -2,5 +2,11 @@
   "id" : "Javatron1",
   "port": 5001,
   "delayStartMs": 5000,
-  "dependencies": []
+  "dependencies": [],
+  "database": {
+    "host": "",
+    "port": "",
+    "user": "",
+    "password": ""
+  }
 }

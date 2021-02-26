@@ -9,8 +9,7 @@ import java.util.*;
 import java.util.function.*;
 
 import com.newrelic.lib.*;
-
-import com.newrelic.api.behaviors.*;
+import com.newrelic.api.Behaviors.*;
 
 import com.newrelic.lib.Logger;
 

@@ -9,7 +9,7 @@
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.newrelic.api.behaviors.BehaviorsApplication</param-value>
+            <param-value>com.newrelic.api.Behaviors.BehaviorsApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -22,7 +22,7 @@
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.newrelic.api.inventory.InventoryApplication</param-value>
+            <param-value>com.newrelic.api.Inventory.InventoryApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -39,7 +39,7 @@
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.newrelic.api.message.MessageApplication</param-value>
+            <param-value>com.newrelic.api.Message.MessageApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -53,6 +53,19 @@
     <servlet-mapping>
         <servlet-name>ResteasyMessage</servlet-name>
         <url-pattern>/validateMessage</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ResteasyHealth</servlet-name>
+        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.newrelic.api.Health.HealthApplication</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResteasyHealth</servlet-name>
+        <url-pattern>/database/health</url-pattern>
     </servlet-mapping>
 
 </web-app>

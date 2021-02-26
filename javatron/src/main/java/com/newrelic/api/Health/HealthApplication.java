@@ -1,17 +1,17 @@
-package com.newrelic.api.Behaviors;
+package com.newrelic.api.Health;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BehaviorsApplication extends Application
+public class HealthApplication extends Application
 {
    private Set<Object> singletons = new HashSet<Object>();
    private Set<Class<?>> empty = new HashSet<Class<?>>();
 
-   public BehaviorsApplication()
+   public HealthApplication()
    {
-      singletons.add(new BehaviorsResource());
+      singletons.add(new HealthResource());
    }
 
    @Override
