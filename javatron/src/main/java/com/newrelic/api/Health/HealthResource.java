@@ -25,7 +25,7 @@ public class HealthResource extends ResourceBase
          throw new Exception("Database is not configured.");
       }
 
-      var repo = MySQLRepository.getInstance(appConfig.FindMySQLConfiguration(), appConfig.FindAppId());
+      var repo = MySQLRepository.getInstance(appConfig.FindMySQLConfiguration());
       isConnected = repo.isConnected();
 
       if (!isConnected)
