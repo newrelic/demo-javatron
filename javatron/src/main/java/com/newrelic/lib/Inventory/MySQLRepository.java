@@ -16,37 +16,34 @@ public class MySQLRepository implements IInventoryRepository
 
     private Connection conn;
     private AppConfigMySQLConfiguration config;
-    private String databaseName;
     private InventoryLoader loader;
 
 
-    private MySQLRepository(AppConfigMySQLConfiguration config, String databaseName)
+    private MySQLRepository(AppConfigMySQLConfiguration config)
     {
         this.loader = new InventoryLoader();
         this.config = config;
-        this.databaseName = databaseName;
     }
 
-    private MySQLRepository(AppConfigMySQLConfiguration config, String databaseName, InventoryLoader loader)
+    private MySQLRepository(AppConfigMySQLConfiguration config, InventoryLoader loader)
     {
         this.loader = loader;
         this.config = config;
-        this.databaseName = databaseName;
     }
 
-    public static MySQLRepository getInstance(AppConfigMySQLConfiguration config, String databaseName)
+    public static MySQLRepository getInstance(AppConfigMySQLConfiguration config)
     {
        if (MySQLRepository.singletonInstance == null) {
-           MySQLRepository.singletonInstance = new MySQLRepository(config, databaseName);
+           MySQLRepository.singletonInstance = new MySQLRepository(config);
        }
 
        return MySQLRepository.singletonInstance;
     }
 
-    public static MySQLRepository getInstance(AppConfigMySQLConfiguration config, String databaseName, InventoryLoader loader)
+    public static MySQLRepository getInstance(AppConfigMySQLConfiguration config, InventoryLoader loader)
     {
        if (MySQLRepository.singletonInstance == null) {
-           MySQLRepository.singletonInstance = new MySQLRepository(config, databaseName, loader);
+           MySQLRepository.singletonInstance = new MySQLRepository(config, loader);
        }
 
        return MySQLRepository.singletonInstance;
@@ -157,13 +154,15 @@ public class MySQLRepository implements IInventoryRepository
         {
             return true;
         }
-        var baseConnectionString = String.format("jdbc:mariadb://%s:%s", config.getHost(),
-                config.getPort());
-        var connectionStringWithDB = String.format("%s/%s", baseConnectionString, this.databaseName);
+        var name = this.config.getName();
+        var host = this.config.getHost();
+        var port = this.config.getPort();
+        var baseConnectionString = String.format("jdbc:mariadb://%s:%s", host, port);
+        var connectionStringWithDB = String.format("%s/%s", baseConnectionString, name);
 
         var isSetup = true;
         isSetup = isSetup && connect(baseConnectionString);
-        isSetup = isSetup && createDatabase(this.databaseName);
+        isSetup = isSetup && createDatabase(name);
         isSetup = isSetup && connect(connectionStringWithDB);
         isSetup = isSetup && createTable();
         return isSetup;
@@ -195,7 +194,7 @@ public class MySQLRepository implements IInventoryRepository
         return false;
     }
 
-    private boolean createDatabase(String name)
+    private boolean  createDatabase(String name)
     {
         var query = String.format("CREATE DATABASE IF NOT EXISTS %s;", name);
         var result = runQuery(query);
@@ -208,7 +207,8 @@ public class MySQLRepository implements IInventoryRepository
 
     private boolean createTable()
     {
-        var query = String.format("CREATE TABLE IF NOT EXISTS `%s`.`inventory` (`id` INT UNSIGNED NOT NULL, `item` VARCHAR(255) NOT NULL,`price` VARCHAR(255) NOT NULL, `sku` VARCHAR(255) NOT NULL, PRIMARY KEY (id));", this.databaseName);
+        var dbName = this.config.getName();
+        var query = String.format("CREATE TABLE IF NOT EXISTS `%s`.`inventory` (`id` INT UNSIGNED NOT NULL, `item` VARCHAR(255) NOT NULL,`price` VARCHAR(255) NOT NULL, `sku` VARCHAR(255) NOT NULL, PRIMARY KEY (id));", dbName);
         var result = runQuery(query);
         var inventory = this.loader.LoadAll();
 

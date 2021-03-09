@@ -21,7 +21,7 @@ public class InventoryRepositoryFactoryTest
     @Test
     public void shouldCreateMySQLRepository()
     {
-       GivenMySQLConfiguration("fakehost", "3000", "testuser", "testpassword");
+       GivenMySQLConfiguration("fakehost", "3000", "testuser", "testpassword", "testdb");
        GivenRepository();
        var manager = InventoryRepositoryFactory.createInventoryRepository(Repository);
        assertTrue( manager instanceof MySQLRepository );
@@ -48,13 +48,14 @@ public class InventoryRepositoryFactoryTest
         return () -> _json.toJSONString();
     }
 
-    public void GivenMySQLConfiguration(String host, String port, String user, String password)
+    public void GivenMySQLConfiguration(String host, String port, String user, String password, String dbName)
     {
         var config = new JSONObject();
         config.put("host", host);
         config.put("port", port);
         config.put("user", user);
         config.put("password", password);
+        config.put("name", dbName);
 
         _json.put("database", config);
     }

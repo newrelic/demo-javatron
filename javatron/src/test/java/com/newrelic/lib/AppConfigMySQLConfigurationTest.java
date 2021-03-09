@@ -28,7 +28,7 @@ public class AppConfigMySQLConfigurationTest
     @Test
     public void shouldBeConfigured()
     {
-        GivenMySQLConfiguration("fakehost", "4000", "testuser", "testpassword");
+        GivenMySQLConfiguration("fakehost", "4000", "testuser", "testpassword", "testdb");
         GivenRepository();
         var config = Repository.FindMySQLConfiguration();
         assertTrue( config.isConfigured() == true);
@@ -46,7 +46,7 @@ public class AppConfigMySQLConfigurationTest
     @Test
     public void shouldNotBeConfiguredWithEmptyStrings()
     {
-        GivenMySQLConfiguration("", "", "", "");
+        GivenMySQLConfiguration("", "", "", "", "");
         GivenRepository();
         var config = Repository.FindMySQLConfiguration();
         assertTrue( config.isConfigured() == false );
@@ -72,13 +72,14 @@ public class AppConfigMySQLConfigurationTest
         return () -> _json.toJSONString();
     }
 
-    public void GivenMySQLConfiguration(String host, String port, String user, String password)
+    public void GivenMySQLConfiguration(String host, String port, String user, String password, String dbName)
     {
         var config = new JSONObject();
         config.put("host", host);
         config.put("port", port);
         config.put("user", user);
         config.put("password", password);
+        config.put("name", dbName);
 
         _json.put("database", config);
     }

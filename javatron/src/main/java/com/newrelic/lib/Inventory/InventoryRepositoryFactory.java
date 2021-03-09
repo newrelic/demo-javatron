@@ -10,7 +10,7 @@ public class InventoryRepositoryFactory
         if (appConfig.FindMySQLConfiguration().isConfigured())
         {
             Logger.GetOrCreate().Info("MySQL configuration found, using MySQLManager.");
-            return MySQLRepository.getInstance(appConfig.FindMySQLConfiguration(), appConfig.FindAppId());
+            return MySQLRepository.getInstance(appConfig.FindMySQLConfiguration());
         }
         else
         {

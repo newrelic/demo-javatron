@@ -7,6 +7,7 @@
     "host": "",
     "port": "",
     "user": "",
-    "password": ""
+    "password": "",
+    "name": ""
   }
 }

@@ -36,10 +36,18 @@ public class AppConfigMySQLConfiguration implements Serializable
         this.password = password;
     }
 
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public boolean isConfigured() {
         if (this.host != null && !this.host.isEmpty() &&
             this.port != null && !this.port.isEmpty() &&
             this.user != null && !this.user.isEmpty() &&
+            this.name != null && !this.name.isEmpty() &&
             this.password != null && !this.password.isEmpty()) {
             return true;
         }
@@ -51,4 +59,5 @@ public class AppConfigMySQLConfiguration implements Serializable
     private String port;
     private String user;
     private String password;
+    private String name;
 }

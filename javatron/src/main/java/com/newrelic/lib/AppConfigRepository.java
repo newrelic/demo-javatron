@@ -70,11 +70,13 @@ public class AppConfigRepository implements IAppConfigRepository
             var port = (String) dbObj.get("port");
             var user = (String) dbObj.get("user");
             var password = (String) dbObj.get("password");
+            var name = (String) dbObj.get("name");
 
             dbConfig.setHost(host);
             dbConfig.setPort(port);
             dbConfig.setUser(user);
             dbConfig.setPassword(password);
+            dbConfig.setName(name);
         }
 
         return dbConfig;
