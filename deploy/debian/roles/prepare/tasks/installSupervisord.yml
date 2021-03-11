@@ -12,11 +12,13 @@
         name: '{{ item }}'
         enabled: yes
       with_items:
-        - supervisord
+        - supervisor
       become: yes
+
     - name: check if supervisord is running
       shell: pgrep supervisord | wc -l
       register: supervisord_running
+
     - name: start supervisord (async)
       command: service supervisor restart
       when: supervisord_running.stdout|int == 0
