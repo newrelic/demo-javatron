@@ -1,0 +1,21 @@
+---
+
+- name: Download
+  shell: "curl -O http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz"
+
+- name: Unpacking
+  shell: "tar xzvf apache-maven-3.6.3-bin.tar.gz"
+
+- name: Remove any previous install
+  file:
+    path: /opt/apache-maven-3.6.3
+    state: absent
+  become: yes
+
+- name: Moving
+  shell: "mv apache-maven-3.6.3 /opt/"
+  become: yes
+
+- name: Add Maven to env path root
+  shell: "echo 'export PATH=$PATH:/opt/apache-maven-3.6.3/bin' >> /etc/profile"
+  become: yes
