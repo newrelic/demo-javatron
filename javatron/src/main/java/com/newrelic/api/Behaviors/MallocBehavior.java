@@ -17,7 +17,7 @@ public class MallocBehavior extends MinMaxParamBehavior
         super(MallocBehavior.Name, value);
     }
 
-    public void Execute()
+    public void Execute() throws Exception
     {
         super.Execute();
 

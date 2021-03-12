@@ -16,7 +16,7 @@ public class HealthResource extends ResourceBase
    {
       EnsureAppIsStarted();
       Logger.GetOrCreate().Info("/api/database/health GET");
-      var appConfig = GetAppConfigRepository();
+      var appConfig = GetApplicationContainer().GetAppConfigRepository();
       var mySQLConfig = appConfig.FindMySQLConfiguration();
       var handler = CreateTronHandler();
       var isConnected = false;

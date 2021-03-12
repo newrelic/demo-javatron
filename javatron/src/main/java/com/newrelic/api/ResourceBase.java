@@ -24,7 +24,7 @@ public class ResourceBase
 
     public void EnsureAppIsStarted() throws Exception
     {
-        var delayStartMs = GetAppConfigRepository().FindDelayStartMs();
+        var delayStartMs = GetApplicationContainer().GetAppConfigRepository().FindDelayStartMs();
         if (delayStartMs > 0)
         {
             var runtime = ManagementFactory.getRuntimeMXBean();
@@ -59,30 +59,31 @@ public class ResourceBase
     public TronHandler CreateTronHandler()
     {
         var httpUtil = GetHttpUtil();
-        var appConfigRepository = GetAppConfigRepository();
+        var appConfigRepository = GetApplicationContainer().GetAppConfigRepository();
         var dependencies = appConfigRepository.FindDependencies();
         return new TronHandler(httpUtil, dependencies);
     }
 
-    public IAppConfigRepository GetAppConfigRepository()
+    public ApplicationContainer GetApplicationContainer()
     {
-        if (_appConfigRepository == null)
+        if (_applicationContainer == null)
         {
-            _appConfigRepository = new AppConfigRepository();
+            _applicationContainer = ApplicationContainer.getInstance();
         }
-        return _appConfigRepository;
+        return _applicationContainer;
     }
 
     public BehaviorService GetBehaviorService()
     {
         if (_behaviorService == null)
         {
-            _behaviorService = new BehaviorService(new BehaviorsRepository(), GetHttpUtil(), GetAppConfigRepository());
+            var appConfig = GetApplicationContainer().GetAppConfigRepository();
+            _behaviorService = new BehaviorService(new BehaviorsRepository(), GetHttpUtil(), appConfig);
         }
         return _behaviorService;
     }
 
     private BehaviorService _behaviorService;
     private IHttpUtil _httpUtil;
-    private IAppConfigRepository _appConfigRepository;
+    private ApplicationContainer _applicationContainer;
 }

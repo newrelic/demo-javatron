@@ -17,17 +17,17 @@ public class BehaviorService
         _appConfigRepository = appConfigRepository;
     }
 
-    public void HandlePreFunc() 
+    public void HandlePreFunc() throws Exception
     {
         handleFunc("PRE");
     }
 
-    public void HandlePostFunc() 
+    public void HandlePostFunc() throws Exception
     {
         handleFunc("POST");
     }
 
-    private void handleFunc(String stepName)
+    private void handleFunc(String stepName) throws Exception
     {
         var behaviors = new Hashtable<String, Behavior>();
         var headers = _httpUtil.GetRequestHeaders();
@@ -44,7 +44,7 @@ public class BehaviorService
         execute(behaviors.values());
     }
 
-    private void execute(Collection<Behavior> behaviors)
+    private void execute(Collection<Behavior> behaviors) throws Exception
     {
         for (var behavior : behaviors)
         {

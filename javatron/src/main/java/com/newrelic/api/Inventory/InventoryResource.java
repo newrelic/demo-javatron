@@ -18,8 +18,7 @@ public class InventoryResource extends ResourceBase
       Logger.GetOrCreate().Info("/api/inventory GET");
       GetBehaviorService().HandlePreFunc();
 
-      var appConfig = GetAppConfigRepository();
-      var repo = InventoryRepositoryFactory.createInventoryRepository(appConfig);
+      var repo = GetApplicationContainer().GetInventoryRepository();
       var entities = repo.FindAll();
       var handler = CreateTronHandler();
       handler.InvokeDependencies("/api/inventory");
@@ -36,9 +35,7 @@ public class InventoryResource extends ResourceBase
       EnsureAppIsStarted();
       Logger.GetOrCreate().Info("/api/inventory/"+id +" GET");
       GetBehaviorService().HandlePreFunc();
-
-      var appConfig = GetAppConfigRepository();
-      var repo = InventoryRepositoryFactory.createInventoryRepository(appConfig);
+      var repo = GetApplicationContainer().GetInventoryRepository();
       var entity = repo.FindOrNull(id);
       var handler = CreateTronHandler();
       handler.InvokeDependencies("/api/inventory/"+id);

@@ -24,7 +24,7 @@ public class Behavior implements Serializable {
         this.value = value;
     }
 
-    public void Execute()
+    public void Execute() throws Exception
     {
         Logger.GetOrCreate().Info("Executing behavior " +this.name);
     }

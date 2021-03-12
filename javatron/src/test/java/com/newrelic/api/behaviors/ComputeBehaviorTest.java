@@ -34,7 +34,7 @@ public class ComputeBehaviorTest
     }
 
     @Test
-    public void shouldExecute()
+    public void shouldExecute() throws Exception
     {
         var behavior = GivenBehavior("[100,150]");
         behavior.Execute();
@@ -42,7 +42,7 @@ public class ComputeBehaviorTest
     }
 
     @Test
-    public void shouldExecuteHighConcurrency()
+    public void shouldExecuteHighConcurrency() throws Exception
     {
         var behavior = GivenBehavior("[100,150,200]");
         behavior.Execute();
@@ -51,7 +51,7 @@ public class ComputeBehaviorTest
     }
 
     @Test
-    public void shouldNotExecuteInvalidRange()
+    public void shouldNotExecuteInvalidRange() throws Exception
     {
         var behavior = GivenBehavior("[101,100]");
         behavior.Execute();
@@ -59,7 +59,7 @@ public class ComputeBehaviorTest
     }
 
     @Test
-    public void shouldNotExecuteMissingRange()
+    public void shouldNotExecuteMissingRange() throws Exception
     {
         var behavior = GivenBehavior("[100]");
         behavior.Execute();
@@ -67,7 +67,7 @@ public class ComputeBehaviorTest
     }
 
     @Test
-    public void shouldNotExecuteMissingEntireRange()
+    public void shouldNotExecuteMissingEntireRange() throws Exception
     {
         var behavior = GivenBehavior("[]");
         behavior.Execute();
@@ -75,7 +75,7 @@ public class ComputeBehaviorTest
     }
 
     @Test
-    public void shouldNotExecuteMissingValue()
+    public void shouldNotExecuteMissingValue() throws Exception
     {
         var behavior = GivenBehavior("");
         behavior.Execute();

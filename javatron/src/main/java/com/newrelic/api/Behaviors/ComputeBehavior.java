@@ -25,7 +25,7 @@ public class ComputeBehavior extends MinMaxParamBehavior
         this._computeFunc = computeFunc;
     }
 
-    public void Execute()
+    public void Execute() throws Exception
     {
         super.Execute();
 

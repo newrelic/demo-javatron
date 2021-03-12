@@ -25,6 +25,7 @@ Javatron supports the below behaviors. For more information, see the [Behavior D
 * Throw
 * Compute
 * Memory Allocation
+* Invalid Query
 
 
 ### Running with Docker
