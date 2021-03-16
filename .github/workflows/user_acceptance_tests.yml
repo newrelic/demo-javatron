@@ -9,11 +9,11 @@ jobs:
   user-acceptance-tests:
     runs-on: ubuntu-latest
     
+    
     strategy:
       fail-fast: false
       matrix:
-        cloud_provider: [aws, azure, gcp] 
-        scenario: [happy, mysql]
+        uat_file_name: ["happy-aws-debian.deploy.config.json","happy-aws-linux2.deploy.config.json","happy-azure.deploy.config.json","happy-gcp.deploy.config.json","mysql-aws.deploy.config.json","mysql-azure.deploy.config.json","mysql-gcp.deploy.config.json"]
 
     steps:
       - name: checkout repo
@@ -32,7 +32,7 @@ jobs:
         run: |
           rm -rf configs $TRON_FOLDER tmp
           mkdir configs $TRON_FOLDER tmp
-          cp ./user_acceptance_tests/deploy_configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json configs
+          cp ./user_acceptance_tests/deploy_configs/${{ matrix.uat_file_name }} configs
           cp -R deploy $TRON_FOLDER
           cp -R javatron $TRON_FOLDER
           echo "$USER_CONFIG" > "configs/uat-$TRON_FOLDER-${{ github.run_id }}.user.credentials.local.json"
@@ -73,18 +73,27 @@ jobs:
           -v $GITHUB_WORKSPACE/configs:/mnt/deployer/configs \
           -v $GITHUB_WORKSPACE/tmp:/tmp \
           ghcr.io/newrelic/deployer:latest \
-          main.rb -d /mnt/deployer/configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json -l debug \
+          main.rb -d /mnt/deployer/configs/${{ matrix.uat_file_name }} -l debug \
           -o /tmp/output.json
 
       - name: debug ls - tmp
         run: |
           ls tmp
 
-      - name: run tests
-        id: test
-        run: ruby ./user_acceptance_tests/tests/${{ matrix.scenario }}.rb
+      - name: run happy tests
+        id: happytest
+        if: contains('${{ matrix.uat_file_name }}', 'happy')
+        run: ruby ./user_acceptance_tests/tests/happy.rb
         env:
           TEST_INPUT_FILE_LOCATION: tmp/output.json
+
+      - name: run mysql tests
+        id: mysqltest
+        if: contains('${{ matrix.uat_file_name }}', 'mysql')
+        run: ruby ./user_acceptance_tests/tests/mysql.rb
+        env:
+          TEST_INPUT_FILE_LOCATION: tmp/output.json
+
 
       - name: run teardown
         if: always()
@@ -94,7 +103,7 @@ jobs:
           -v $GITHUB_WORKSPACE/configs:/mnt/deployer/configs \
           -v $GITHUB_WORKSPACE/tmp:/tmp \
           ghcr.io/newrelic/deployer:latest \
-          main.rb -d /mnt/deployer/configs/${{ matrix.scenario }}-${{ matrix.cloud_provider }}.deploy.config.json -t -l debug
+          main.rb -d /mnt/deployer/configs/${{ matrix.uat_file_name }} -t -l debug
       
       - name: slack notification
         uses:  8398a7/action-slack@v3
@@ -156,7 +165,7 @@ jobs:
                       type: "mrkdwn",
                       text: [
                         "*Result:*",
-                        `• ${ ${{ steps.test.outcome == 'success' }} === true ? '✅' : '❌' } Test (${{ matrix.cloud_provider }}, ${{ matrix.scenario }}): ${{ steps.test.outcome }}`
+                        `• ${ ${{ steps.test.outcome == 'success' }} === true ? '✅' : '❌' } Test (${{ matrix.uat_file_name }}): ${{ steps.test.outcome }}`
                       ].join('\n')
                     }
                   },
