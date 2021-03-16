@@ -40,28 +40,32 @@ describe 'Deployment Tests' do
     headers = { 'X-DEMO-INVALID-QUERY-PRE' => 0 }
     err = _(-> { RestClient.get("#{service_url}/api/inventory", headers) }).must_raise(RestClient::ExceptionWithResponse)
     expect(err.http_code).must_equal(500)
-    expect(err.response).must_include('java.lang.Exception: (conn=40) Table')
+    expect(err.response).must_include('java.lang.Exception:')
+    expect(err.response).must_include('inventry')
   end
 
   it 'X-DEMO-INVALID-QUERY-POST behavior should throw on GET /api/inventory' do
     headers = { 'X-DEMO-INVALID-QUERY-POST' => 0 }
     err = _(-> { RestClient.get("#{service_url}/api/inventory", headers) }).must_raise(RestClient::ExceptionWithResponse)
     expect(err.http_code).must_equal(500)
-    expect(err.response).must_include('java.lang.Exception: (conn=40) Table')
+    expect(err.response).must_include('java.lang.Exception:')
+    expect(err.response).must_include('inventry')
   end
 
   it 'X-DEMO-INVALID-QUERY-PRE behavior should throw on GET /api/inventory/1' do
     headers = { 'X-DEMO-INVALID-QUERY-PRE' => 0 }
     err = _(-> { RestClient.get("#{service_url}/api/inventory/1", headers) }).must_raise(RestClient::ExceptionWithResponse)
     expect(err.http_code).must_equal(500)
-    expect(err.response).must_include('java.lang.Exception: (conn=40) Table')
+    expect(err.response).must_include('java.lang.Exception:')
+    expect(err.response).must_include('inventry')
   end
 
   it 'X-DEMO-INVALID-QUERY-POST behavior should throw on GET /api/inventory/1' do
     headers = { 'X-DEMO-INVALID-QUERY-POST' => 0 }
     err = _(-> { RestClient.get("#{service_url}/api/inventory/1", headers) }).must_raise(RestClient::ExceptionWithResponse)
     expect(err.http_code).must_equal(500)
-    expect(err.response).must_include('java.lang.Exception: (conn=40) Table')
+    expect(err.response).must_include('java.lang.Exception:')
+    expect(err.response).must_include('inventry')
   end
 
   def get_test_input(file_path)
