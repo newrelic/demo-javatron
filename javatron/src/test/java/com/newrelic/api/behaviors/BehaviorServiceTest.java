@@ -20,7 +20,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldExecuteBehaviorForAll()
+    public void shouldExecuteBehaviorForAll() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -35,7 +35,7 @@ public class BehaviorServiceTest
     }
     
     @Test
-    public void shouldExecuteBehaviorCaseInsensitive()
+    public void shouldExecuteBehaviorCaseInsensitive() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -50,7 +50,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldExecuteBehaviorForPost()
+    public void shouldExecuteBehaviorForPost() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -65,7 +65,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldExecuteBehaviorForSpecific()
+    public void shouldExecuteBehaviorForSpecific() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -80,7 +80,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldExecuteBehaviorForSpecificOverride()
+    public void shouldExecuteBehaviorForSpecificOverride() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -96,7 +96,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldExecuteBehaviorForSpecificOverrideDifferentOrder()
+    public void shouldExecuteBehaviorForSpecificOverrideDifferentOrder() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -112,7 +112,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldNotExecuteBehaviorNoHeader()
+    public void shouldNotExecuteBehaviorNoHeader() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -124,7 +124,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldNotExecuteBehaviorWhenNoDefinitions()
+    public void shouldNotExecuteBehaviorWhenNoDefinitions() throws Exception
     {
         GivenAppId("APP1");
         GivenHeader("X-DEMO-TEST1-PRE", "a value");
@@ -136,7 +136,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldNotExecuteBehaviorDifferentStep()
+    public void shouldNotExecuteBehaviorDifferentStep() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -149,7 +149,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldNotExecuteBehaviorDifferentAppId()
+    public void shouldNotExecuteBehaviorDifferentAppId() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");
@@ -162,7 +162,7 @@ public class BehaviorServiceTest
     }
 
     @Test
-    public void shouldNotExecuteBehaviorDifferentBehaviorName()
+    public void shouldNotExecuteBehaviorDifferentBehaviorName() throws Exception
     {
         GivenAppId("APP1");
         GivenBehaviorName("TEST1");

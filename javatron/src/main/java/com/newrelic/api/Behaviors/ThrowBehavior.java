@@ -11,7 +11,7 @@ public class ThrowBehavior extends Behavior
         this.setName(ThrowBehavior.Name);
     }
 
-    public void Execute()
+    public void Execute() throws Exception
     {
         Behavior reference = null;
         super.Execute();

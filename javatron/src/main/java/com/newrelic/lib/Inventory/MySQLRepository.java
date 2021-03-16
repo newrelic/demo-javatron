@@ -90,7 +90,7 @@ public class MySQLRepository implements IInventoryRepository
 
     public boolean isConnected()
     {
-        if (initialize()) {
+        if (this.config.isConfigured() && initialize()) {
             var results = runQuery("SELECT 1;");
             if (results != null) {
                 return true;
@@ -98,6 +98,26 @@ public class MySQLRepository implements IInventoryRepository
         }
 
         return false;
+    }
+
+    public void queryInvalidTable() throws Exception
+    {
+        if (!initialize())
+        {
+            return;
+        }
+
+        var statement = this.conn.createStatement();
+        try
+        {
+            var query = "SELECT * FROM inventry;";
+            statement.executeQuery(query);
+        }
+        catch (SQLException ex)
+        {
+            statement.close();
+            throw new Exception(ex.getMessage());
+        }
     }
 
     private ResultSet runQuery(String queryString)
