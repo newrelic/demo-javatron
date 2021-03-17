@@ -2,7 +2,7 @@
     "services": [
       {
         "id": "java1",
-        "source_repository": "-b debian-support https://github.com/newrelic/demo-javatron.git",
+        "local_source_path": "demo-javatron",
         "deploy_script_path": "deploy/debian/roles",
         "port": 5001,
         "destinations": ["host"],
