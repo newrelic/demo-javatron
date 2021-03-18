@@ -1,0 +1,34 @@
+---
+
+- debug:
+    msg: Upload {{ service_id }} service
+
+- fail:
+    msg: "service_id is required"
+  when: service_id is not defined
+
+- fail:
+    msg: "service_port is required"
+  when: service_port is not defined
+
+- name: defaulting delay_start_ms
+  set_fact:
+    delay_start_ms: 0
+  when: delay_start_ms is not defined
+
+- include_tasks: sync_service.yml
+
+- name: Check app_config.json exist
+  stat:
+    path: ~/{{ service_id }}/config/app_config.json
+  register: app_config_exist
+
+- template:
+    src: deploy.config.j2
+    dest: ~/{{ service_id }}/config/app_config.json
+  when: app_config_exist.stat.exists == False
+
+- name: Copy app config to target for tomcat
+  shell: "cp ~/{{ service_id }}/config/app_config.json ~/{{ service_id }}/src/main/webapp/WEB-INF/classes/config/app_config.json"
+
+- include_tasks: create_artifact_params.yml

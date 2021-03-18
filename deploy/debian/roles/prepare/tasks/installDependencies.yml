@@ -1,0 +1,7 @@
+- name: Get install dependencies
+  package:
+    name: '{{ packages }}'
+  vars:
+    packages:
+      - rsync
+  become: yes

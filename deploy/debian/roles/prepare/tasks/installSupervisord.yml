@@ -1,0 +1,27 @@
+---
+- block:
+    - name: install supervisord
+      package:
+        name: supervisor
+        state: present
+      ignore_errors: yes
+      become: yes
+
+    - name: Start supervisord
+      service:
+        name: '{{ item }}'
+        enabled: yes
+      with_items:
+        - supervisor
+      become: yes
+
+    - name: check if supervisord is running
+      shell: pgrep supervisord | wc -l
+      register: supervisord_running
+
+    - name: start supervisord (async)
+      command: service supervisor restart
+      when: supervisord_running.stdout|int == 0
+      async: 60
+      poll: 0
+      become: yes
