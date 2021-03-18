@@ -89,14 +89,14 @@ jobs:
 
       - name: run happy tests
         id: happytest
-        if: contains('${{ matrix.uat_file_name }}', 'happy')
+        if: contains(matrix.uat_file_name, 'happy')
         run: ruby ./user_acceptance_tests/tests/happy.rb
         env:
           TEST_INPUT_FILE_LOCATION: tmp/output.json
 
       - name: run mysql tests
         id: mysqltest
-        if: contains('${{ matrix.uat_file_name }}', 'mysql')
+        if: contains(matrix.uat_file_name, 'mysql')
         run: ruby ./user_acceptance_tests/tests/mysql.rb
         env:
           TEST_INPUT_FILE_LOCATION: tmp/output.json
