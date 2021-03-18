@@ -8,17 +8,24 @@ env:
 jobs:
   user-acceptance-tests:
     runs-on: ubuntu-latest
-    
-    
+
+
     strategy:
       fail-fast: false
       matrix:
-        uat_file_name: ["happy-aws-debian.deploy.config.json","happy-aws-linux2.deploy.config.json","happy-azure.deploy.config.json","happy-gcp.deploy.config.json","mysql-aws.deploy.config.json","mysql-azure.deploy.config.json","mysql-gcp.deploy.config.json"]
+        uat_file_name:
+          - happy-aws-debian.deploy.config.json
+          - happy-aws-linux2.deploy.config.json
+          - happy-azure.deploy.config.json
+          - happy-gcp.deploy.config.json
+          - mysql-aws.deploy.config.json
+          - mysql-azure.deploy.config.json
+          - mysql-gcp.deploy.config.json
 
     steps:
       - name: checkout repo
         uses: actions/checkout@v2
-      
+
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: 2.7
@@ -57,7 +64,7 @@ jobs:
         env:
           UAT_GCP_PEM_FILE: ${{ secrets.UAT_GCP_PEM_FILE }}
           UAT_GCP_SERVICEACCOUNT_FILE: ${{ secrets.UAT_GCP_SERVICEACCOUNT_FILE }}
-        run: | 
+        run: |
           echo "$UAT_GCP_PEM_FILE" > $GITHUB_WORKSPACE/configs/compute-user.pem
           chmod 400 $GITHUB_WORKSPACE/configs/compute-user.pem
           echo "$UAT_GCP_SERVICEACCOUNT_FILE" > $GITHUB_WORKSPACE/configs/demo-newrelic-staging-gcp-service-account.json
@@ -104,7 +111,7 @@ jobs:
           -v $GITHUB_WORKSPACE/tmp:/tmp \
           ghcr.io/newrelic/deployer:latest \
           main.rb -d /mnt/deployer/configs/${{ matrix.uat_file_name }} -t -l debug
-      
+
       - name: slack notification
         uses:  8398a7/action-slack@v3
         if: always() && github.event_name == 'push'

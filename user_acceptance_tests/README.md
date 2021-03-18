@@ -16,7 +16,9 @@ Before we go too far, some definitions for clarity:
 
 The files within this directory are used in the execution of the test GitHub Actions workflow, found [here](../.github/workflows/deployment_tests.yml).
 
-In the `deploy_configs` folder, you will find a deployment configuration for each (`scenario`, `cloud_provider`) combination we want to test. Deployment configurations in this folder match the following naming convention: `{scenario_name}`-`{cloud_provider}`.deploy.config.json
+In the `deploy_configs` folder, you will find a deployment configuration for each (`scenario`, `cloud_provider`) combination we want to test. Deployment configurations in this folder match the following naming convention: `{scenario_name}`-`{cloud_provider}`.deploy.config.json.
+
+In some cases additional tests may be need to cover support for different operating systems (redhat versus debian for example).  The following naming convention is used: `{scenario_name}`-`{cloud_provider}`-{operating_system}`.deploy.config.json
 
 In the `tests` folder, you will find a test file for each `scenario` we want to test. Test files in this folder match the following naming convention: `{scenario_name}`.rb
 
@@ -38,14 +40,15 @@ If a workflow is triggered for `(production, aws)`, the following will occur:
 
 ## Adding new scenarios, new deployment configurations, new tests
 
-As seen above, each (scenario, cloud_provider) combination represents a testcase that we believe is valuable to test. The scenario is the important functional component, and the cloud provider just ensures that the scenario runs for that given environment.
+As seen above, each (scenario, cloud_provider, operating system) combination represents a testcase that we believe is valuable to test. The scenario is the important functional component, and the cloud provider or operating system just ensures that the scenario runs for that given environment.
 
 The current setup is:
 
 * 2 conceptual scenario. (Happy path for normal and mysql)
 * 3 deploy configs (duplicate the scenario pieces for each cloud_provider).
+* 2 operating  systems (optional)
 * 2 test file for the scenario that runs once for each deployment. This file can contain any number of tests as well as any setup needed in order for the tests to run.
 
-The deploy configs will under the [deploy_configs](./deploy_configs) folder with a name matching `{scenario}-{cloud_provider}.deploy.config.json`
+The deploy configs will under the [deploy_configs](./deploy_configs) folder with a name matching `{scenario}-{cloud_provider}.deploy.config.json` or `{scenario_name}`-`{cloud_provider}`-{operating_system}`.deploy.config.json
 
 The test file will live under the [tests](./tests) folder with a name matching `{scenario}.rb`
