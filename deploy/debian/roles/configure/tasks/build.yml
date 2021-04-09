@@ -1,6 +1,6 @@
 ---
 - name: Clean previous and build
-  shell: '/opt/apache-maven-3.6.3/bin/mvn clean package'
+  shell: '/opt/apache-maven/bin/mvn clean package'
   args:
     chdir: /home/{{ ansible_user }}/{{ service_id }}
   environment:
