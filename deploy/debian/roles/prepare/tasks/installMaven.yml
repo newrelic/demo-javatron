@@ -1,21 +1,28 @@
 ---
 
+- name: set facts for maven version
+  set_fact:
+    maven_version: 3.8.1
+
 - name: Download
-  shell: "curl -O http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz"
+  shell: "curl -O https://mirrors.ocf.berkeley.edu/apache/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz"
 
 - name: Unpacking
-  shell: "tar xzvf apache-maven-3.6.3-bin.tar.gz"
+  shell: "tar xzvf apache-maven-{{ maven_version }}-bin.tar.gz"
+
+- name: Rename maven folder
+  shell: "mv apache-maven-{{ maven_version }}/ apache-maven"
 
 - name: Remove any previous install
   file:
-    path: /opt/apache-maven-3.6.3
+    path: /opt/apache-maven
     state: absent
   become: yes
 
 - name: Moving
-  shell: "mv apache-maven-3.6.3 /opt/"
+  shell: "mv apache-maven /opt/"
   become: yes
 
 - name: Add Maven to env path root
-  shell: "echo 'export PATH=$PATH:/opt/apache-maven-3.6.3/bin' >> /etc/profile"
+  shell: "echo 'export PATH=$PATH:/opt/apache-maven/bin' >> /etc/profile"
   become: yes

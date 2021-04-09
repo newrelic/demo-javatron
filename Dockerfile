@@ -12,10 +12,10 @@ RUN mv jdk-14.0.1 /opt/
 ENV JAVA_HOME=/opt/jdk-14.0.1
 ENV PATH=$PATH:$JAVA_HOME/bin
 ## Maven
-RUN curl -O http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
-RUN tar xzvf apache-maven-3.6.3-bin.tar.gz
-RUN mv apache-maven-3.6.3 /opt/
-ENV PATH=$PATH:/opt/apache-maven-3.6.3/bin
+RUN curl -O https://mirrors.ocf.berkeley.edu/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
+RUN tar xzvf apache-maven-3.8.1-bin.tar.gz
+RUN mv apache-maven-3.8.1 /opt/
+ENV PATH=$PATH:/opt/apache-maven-3.8.1/bin
 
 # Tomcat
 RUN useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
