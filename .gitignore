@@ -27,3 +27,5 @@ javatron/target/*
 *.local*
 
 *.DS_Store
+
+*.idea/
