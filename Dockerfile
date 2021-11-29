@@ -13,8 +13,8 @@ ENV JAVA_HOME=/opt/jdk-14.0.1
 ENV PATH=$PATH:$JAVA_HOME/bin
 ## Maven
 RUN curl -O --insecure https://mirrors.ocf.berkeley.edu/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
-RUN tar xzvf apache-maven-3.8.3-bin.tar.gz
-RUN mv apache-maven-3.8.3 /opt/
+RUN tar xzvf apache-maven-3.8.4-bin.tar.gz
+RUN mv apache-maven-3.8.4 /opt/
 ENV PATH=$PATH:/opt/apache-maven-3.8.1/bin
 
 # Tomcat
