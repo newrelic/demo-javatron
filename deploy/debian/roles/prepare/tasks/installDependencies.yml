@@ -1,3 +1,7 @@
+- name: Get latest
+  run: |
+    sudo apt-get update -y
+
 - name: Get install dependencies
   package:
     name: '{{ packages }}'
