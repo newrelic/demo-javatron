@@ -1,3 +1,4 @@
+---
 - name: Get latest
   run: |
     sudo apt-get update -y
