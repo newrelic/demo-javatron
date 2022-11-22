@@ -1,7 +1,7 @@
 ---
-- name: Get latest
-  run: |
-    sudo apt-get update -y
+- name: Get latest packages info
+  shell: "apt-get update -y"
+  become: true
 
 - name: Get install dependencies
   package:
