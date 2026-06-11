@@ -9,4 +9,17 @@
   vars:
     packages:
       - rsync
+      # Debian 12 (Bookworm) does not ship cron by default. The start-phase
+      # cronjob.yml writes a crontab entry to drive periodic traffic to the
+      # supervised service; without `cron` installed, `crontab` is not found
+      # (rc=127) and the start phase fails. Linux/RHEL variant has cronie
+      # pre-installed via the AmazonLinux2 AMI, so this gap is debian-only.
+      - cron
+  become: yes
+
+- name: Ensure cron service is running
+  service:
+    name: cron
+    state: started
+    enabled: yes
   become: yes
