@@ -7,6 +7,21 @@
       ignore_errors: yes
       become: yes
 
+    # superlance provides /usr/local/bin/memmon, referenced in supervisord.conf
+    # by the [eventlistener:memmon{{ service_id }}] entry. apt's `supervisor`
+    # package does not include it. The linux/ variant installs it via pip;
+    # debian/ was missing this step, causing `supervisorctl start memmonjava1`
+    # to fail with "ERROR (no such file)".
+    - name: install pip3 for superlance
+      package:
+        name: python3-pip
+        state: present
+      become: yes
+
+    - name: install superlance (provides memmon)
+      shell: pip3 install --break-system-packages -U superlance
+      become: yes
+
     - name: Start supervisord
       service:
         name: '{{ item }}'
