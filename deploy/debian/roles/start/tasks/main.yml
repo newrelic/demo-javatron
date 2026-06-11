@@ -33,5 +33,12 @@
   args:
     chdir: /etc/supervisor/conf.d
   become: true
+  register: memmon_start
+  # eventlisteners default to autostart=true, so `supervisorctl add memmonX`
+  # already starts memmonX before this task runs. Tolerate the resulting
+  # "already started" stdout (rc=1) — only fail on real errors.
+  failed_when:
+    - memmon_start.rc != 0
+    - "'already started' not in memmon_start.stdout"
 
 - include_tasks: cronjob.yml
