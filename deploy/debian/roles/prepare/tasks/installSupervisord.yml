@@ -22,6 +22,26 @@
       shell: pip3 install --break-system-packages -U superlance
       become: yes
 
+    # pip3 installs the memmon entry-point script under /usr/local/bin, but
+    # the apt-installed `supervisor` daemon on Debian 12 starts via systemd
+    # with a PATH that does not always include /usr/local/bin. Symlinking
+    # into /usr/bin guarantees memmon is on the daemon's PATH at runtime
+    # (so `supervisorctl start memmonjava1` doesn't ENOENT).
+    - name: locate memmon after superlance install
+      shell: which memmon
+      register: memmon_path
+      become: yes
+      changed_when: false
+
+    - name: symlink memmon into /usr/bin for supervisor PATH
+      file:
+        src: "{{ memmon_path.stdout }}"
+        dest: /usr/bin/memmon
+        state: link
+        force: yes
+      when: memmon_path.stdout != "/usr/bin/memmon"
+      become: yes
+
     - name: Start supervisord
       service:
         name: '{{ item }}'
