@@ -1,10 +1,18 @@
 ---
+# `mvn clean package` occasionally fails with transient Maven Central
+# network errors (e.g. "Connection reset" while fetching a transitive
+# pom). Retry up to 3 times with a 30-second back-off so a single
+# flaky download doesn't fail the whole deployer test run.
 - name: Clean previous and build
   shell: '/opt/apache-maven/bin/mvn clean package'
   args:
     chdir: /home/{{ ansible_user }}/{{ service_id }}
   environment:
     JAVA_HOME: /opt/jdk-14.0.1
+  register: mvn_build
+  retries: 3
+  delay: 30
+  until: mvn_build.rc == 0
 
 - name: Remove any previous deployed war
   file:
