@@ -8,6 +8,12 @@ name: Repolinter Action
 # filtered in the "Test Default Branch" step.
 on: [push, workflow_dispatch]
 
+# issues: write is required by newrelic/repolinter-action's output_type: issue
+# (it creates/edits an issue on this repo using the default GITHUB_TOKEN).
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   repolint:
     name: Run Repolinter
