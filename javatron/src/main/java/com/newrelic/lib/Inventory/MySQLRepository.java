@@ -71,8 +71,7 @@ public class MySQLRepository implements IInventoryRepository
             throw new Exception("Unable to connect to the database.");
         }
 
-        var query = String.format("SELECT * FROM inventory WHERE ID = %s;", id);
-        var results = runQuery(query);
+        var results = runQuery("SELECT * FROM inventory WHERE ID = ?;", id);
         if (results == null)
         {
             throw new Exception("Unable to query database.");
@@ -126,6 +125,28 @@ public class MySQLRepository implements IInventoryRepository
         {
             var statement = this.conn.createStatement();
             var results = statement.executeQuery(queryString);
+            statement.close();
+
+            return results;
+        }
+        catch (SQLException ex)
+        {
+            Logger.GetOrCreate().Error(ex.getMessage());
+        }
+
+        return null;
+    }
+
+    private ResultSet runQuery(String queryString, Object... params)
+    {
+        try
+        {
+            var statement = this.conn.prepareStatement(queryString);
+            for (int i = 0; i < params.length; i++)
+            {
+                statement.setObject(i + 1, params[i]);
+            }
+            var results = statement.executeQuery();
             statement.close();
 
             return results;

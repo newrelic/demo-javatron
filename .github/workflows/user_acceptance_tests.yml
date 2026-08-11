@@ -2,6 +2,9 @@ name: User Acceptance Tests
 
 on: [pull_request, workflow_dispatch]
 
+permissions:
+  contents: read
+
 env:
   TRON_FOLDER: demo-javatron
 
